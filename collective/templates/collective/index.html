@@ -1,0 +1,10 @@
+<h1>Index page</h1>
+{% if collectives %}
+  <ul>
+    {% for collective in collectives %}
+      <li> {{ collective.name }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p> No collectives created</p>
+{% endif %}
