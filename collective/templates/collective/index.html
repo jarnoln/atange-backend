@@ -1,10 +1,18 @@
+{% extends 'collective/base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
 <h1>Index page</h1>
 {% if collectives %}
   <ul>
     {% for collective in collectives %}
-      <li> {{ collective.name }}</li>
+      <li> <a href="{% url 'collective' collective.name %}">{{ collective.title }}</a> </li>
     {% endfor %}
   </ul>
 {% else %}
   <p> No collectives created</p>
 {% endif %}
+
+{% endblock %}
