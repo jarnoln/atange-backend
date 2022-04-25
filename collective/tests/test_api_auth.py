@@ -9,7 +9,13 @@ from rest_framework.test import APIClient
 class AuthTestCase(TestCase):
     def login(self):
         client = APIClient()
-        user = User.objects.create_user(username='superman', password='Man_of_Steel')
+        user = User.objects.create_user(
+            username='superman',
+            password='Man_of_Steel',
+            email='clark@dailyplanet.com',
+            first_name='Clark',
+            last_name='Kent'
+        )
         login_data = {'username': user.username, 'password': 'Man_of_Steel'}
         response = client.post('/auth/token/login/', login_data)
         data_out = json.loads(response.content.decode())
@@ -51,7 +57,7 @@ class UserDetailViewTests(AuthTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out['username'], 'superman')
-        self.assertEqual(data_out['email'], '')
+        self.assertEqual(data_out['email'], 'clark@dailyplanet.com')
 
     def test_user_details_no_auth(self):
         client = APIClient()
@@ -66,3 +72,8 @@ class LogoutViewTests(AuthTestCase):
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.post('/auth/token/logout/', {})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_logout_no_auth(self):
+        client = APIClient()
+        response = client.post('/auth/token/logout/', {})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
