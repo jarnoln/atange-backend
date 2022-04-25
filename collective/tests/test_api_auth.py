@@ -36,6 +36,16 @@ class RegisterViewTests(TestCase):
         self.assertEqual(data_out['email'], '')
 
 
+class DeleteUserViewTests(AuthTestCase):
+    def delete_user(self):
+        client = APIClient()
+        token = self.login()
+        self.assertEqual(User.objects.count(), 1)
+        response = client.delete('/users/me/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(User.objects.count(), 0)
+
+
 class LoginViewTests(TestCase):
     def test_login(self):
         client = APIClient()
