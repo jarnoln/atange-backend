@@ -25,6 +25,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ['email', 'first_name', 'last_name']
 
 
+class CollectiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collective
+        fields = ['name', 'title', 'description', 'is_visible', 'creator', 'created', 'edited']
+
+
 class UserInfo(APIView):
     def get(self, request, username, format=None):
         user = get_object_or_404(User, username=username)
@@ -38,3 +44,10 @@ class UserInfo(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CollectiveDetail(APIView):
+    def get(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        serializer = CollectiveSerializer(collective)
+        return Response(serializer.data)
