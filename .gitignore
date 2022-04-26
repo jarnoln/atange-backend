@@ -1,5 +1,6 @@
 .idea
+.coverage
+coverage.xml
 __pycache__
 passwords.py
 db.sqlite3
-
