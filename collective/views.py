@@ -14,10 +14,6 @@ def index(request):
     return render(request, 'collective/index.html', context)
 
 
-def collective(request, collective_name):
-    return HttpResponse('Collective: {}'.format(collective_name))
-
-
 class UserInfoSerializer(serializers.ModelSerializer):
     """ Editable user data (does not include username or password) """
     class Meta:
@@ -51,3 +47,11 @@ class CollectiveDetail(APIView):
         collective = get_object_or_404(Collective, name=name)
         serializer = CollectiveSerializer(collective)
         return Response(serializer.data)
+
+    def put(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        serializer = CollectiveSerializer(collective, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -8,7 +8,7 @@
 {% if collectives %}
   <ul>
     {% for collective in collectives %}
-      <li> <a href="{% url 'collective' collective.name %}">{{ collective.title }}</a> </li>
+      <li> {{ collective.title }} </li>
     {% endfor %}
   </ul>
 {% else %}

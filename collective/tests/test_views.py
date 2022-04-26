@@ -15,13 +15,5 @@ class IndexViewTests(TestCase):
         collective_2 = Collective.objects.create(name='jsa', title='JSA')
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, collective_1.name)
-        self.assertContains(response, collective_2.name)
-
-
-class CollectiveViewTests(TestCase):
-    def test_collective_view(self):
-        collective = Collective.objects.create(name='jla', title='JLA')
-        response = self.client.get('/collective/jla/')
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'jla')
+        self.assertContains(response, collective_1.title)
+        self.assertContains(response, collective_2.title)
