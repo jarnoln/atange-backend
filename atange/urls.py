@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path('', include('collective.urls')),
@@ -22,4 +23,8 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('admin/', admin.site.urls),
+    path('openapi', get_schema_view(
+        title='Atange',
+        description='API for Atange backend',
+        version='0.1'), name='openapi-schema')
 ]
