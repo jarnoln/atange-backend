@@ -41,7 +41,6 @@ class UserInfo(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class CollectiveDetail(APIView):
     def get(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
@@ -54,4 +53,14 @@ class CollectiveDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, name, format=None):
+        if Collective.objects.filter(name=name).count() != 0:
+            return Response('Collective already exists', status=status.HTTP_400_BAD_REQUEST)
+        serializer = CollectiveSerializer(data=request.data)
+        print(request)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
