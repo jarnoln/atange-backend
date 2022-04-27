@@ -9,7 +9,8 @@ from .test_api_auth import AuthTestCase
 class UserInfoViewTests(AuthTestCase):
     def test_get_user_info(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.get('/api/user/superman/')
         data_out = json.loads(response.content.decode())
@@ -20,7 +21,8 @@ class UserInfoViewTests(AuthTestCase):
 
     def test_no_such_user(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.get('/api/user/nobody/')
         data_out = json.loads(response.content.decode())
@@ -28,7 +30,8 @@ class UserInfoViewTests(AuthTestCase):
 
     def test_update_user_info(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         data_in = {
             'email': 'kalel@krypton.planet',

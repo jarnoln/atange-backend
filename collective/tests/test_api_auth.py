@@ -7,8 +7,7 @@ from rest_framework.test import APIClient
 
 
 class AuthTestCase(TestCase):
-    def login(self):
-        client = APIClient()
+    def create_user(self):
         user = User.objects.create_user(
             username='superman',
             password='Man_of_Steel',
@@ -16,6 +15,10 @@ class AuthTestCase(TestCase):
             first_name='Clark',
             last_name='Kent'
         )
+        return user
+
+    def login(self, user):
+        client = APIClient()
         login_data = {'username': user.username, 'password': 'Man_of_Steel'}
         response = client.post('/auth/token/login/', login_data)
         data_out = json.loads(response.content.decode())
@@ -39,7 +42,8 @@ class RegisterViewTests(TestCase):
 class DeleteUserViewTests(AuthTestCase):
     def delete_user(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        self.login(user)
         self.assertEqual(User.objects.count(), 1)
         response = client.delete('/users/me/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -61,13 +65,14 @@ class LoginViewTests(TestCase):
 class UserDetailViewTests(AuthTestCase):
     def test_user_details(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.get('/auth/users/me/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(data_out['username'], 'superman')
-        self.assertEqual(data_out['email'], 'clark@dailyplanet.com')
+        self.assertEqual(data_out['username'], user.username)
+        self.assertEqual(data_out['email'], user.email)
 
     def test_user_details_no_auth(self):
         client = APIClient()
@@ -78,7 +83,8 @@ class UserDetailViewTests(AuthTestCase):
 class LogoutViewTests(AuthTestCase):
     def test_logout(self):
         client = APIClient()
-        token = self.login()
+        user = self.create_user()
+        token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.post('/auth/token/logout/', {})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

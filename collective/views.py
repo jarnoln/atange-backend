@@ -59,9 +59,17 @@ class CollectiveDetail(APIView):
 
     def post(self, request, name, format=None):
         if Collective.objects.filter(name=name).count() != 0:
-            return Response('Collective {} already exists'.format(name), status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Collective {} already exists'.format(name)}, status=status.HTTP_400_BAD_REQUEST)
         serializer = CollectiveSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(creator=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        if request.user != collective.creator:
+            return Response({'detail': 'Only creator can delete'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        collective.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
