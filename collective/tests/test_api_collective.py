@@ -61,7 +61,26 @@ class CollectiveDetailViewTests(AuthTestCase):
         response = client.post('/api/collective/jla/', data_in)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Collective.objects.count(), 1)
+        collective = Collective.objects.first()
+        self.assertEqual(collective.name, data_in['name'])
+        self.assertEqual(collective.creator.username, 'superman')
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out['name'], data_in['name'])
         self.assertEqual(data_out['title'], data_in['title'])
         self.assertEqual(data_out['description'], data_in['description'])
+        self.assertEqual(data_out['creator'], 'superman')
+
+    def test_create_collective_already_exists(self):
+        client = APIClient()
+        token = self.login()
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        Collective.objects.create(name='jla', title='JLA')
+        self.assertEqual(Collective.objects.count(), 1)
+        data_in = {
+            'name': 'jla',
+            'title': 'JLA',
+            'description': 'Justice League of America'
+        }
+        response = client.post('/api/collective/jla/', data_in)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Collective.objects.count(), 1)

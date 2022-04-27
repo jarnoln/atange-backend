@@ -22,6 +22,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class CollectiveSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source='creator.username')
     class Meta:
         model = Collective
         fields = ['name', 'title', 'description', 'is_visible', 'creator', 'created', 'edited']
@@ -41,6 +42,7 @@ class UserInfo(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CollectiveDetail(APIView):
     def get(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
@@ -57,10 +59,9 @@ class CollectiveDetail(APIView):
 
     def post(self, request, name, format=None):
         if Collective.objects.filter(name=name).count() != 0:
-            return Response('Collective already exists', status=status.HTTP_400_BAD_REQUEST)
+            return Response('Collective {} already exists'.format(name), status=status.HTTP_400_BAD_REQUEST)
         serializer = CollectiveSerializer(data=request.data)
-        print(request)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(creator=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
