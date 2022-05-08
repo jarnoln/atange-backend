@@ -67,6 +67,9 @@ class CollectiveDetail(APIView):
 
     def put(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
+        if request.user != collective.creator:
+            return Response({'detail': 'Only creator can edit'}, status=status.HTTP_401_UNAUTHORIZED)
+
         serializer = CollectiveSerializer(collective, data=request.data)
         if serializer.is_valid():
             serializer.save()

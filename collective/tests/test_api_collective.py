@@ -50,6 +50,23 @@ class CollectiveDetailViewTests(AuthTestCase):
         self.assertEqual(data_out['title'], 'Section 8')
         self.assertEqual(data_out['description'], 'Replaces old JLA')
 
+    def test_update_collective_when_not_creator(self):
+        client = APIClient()
+        user = self.create_user()
+        token = self.login(user)
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        creator = User.objects.create(username='batman', password='ImBatman')
+        Collective.objects.create(name='jla', title='JLA', creator=creator)
+        data_in = {
+            'name': 'section8',
+            'title': 'Section 8',
+            'description': 'Replaces old JLA'
+        }
+        response = client.put('/api/collective/jla/', data_in)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(data_out['detail'], 'Only creator can edit')
+
     def test_create_collective(self):
         client = APIClient()
         user = self.create_user()
