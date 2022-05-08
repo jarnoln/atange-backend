@@ -29,6 +29,13 @@ class UserInfo(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CollectiveList(APIView):
+    def get(self, request, format=None):
+        collective_list = Collective.objects.all()
+        serializer = CollectiveSerializer(collective_list, many=True)
+        return Response(serializer.data)
+
+
 class CollectiveDetail(APIView):
     def get(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
