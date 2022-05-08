@@ -73,6 +73,20 @@ class CollectiveDetailViewTests(AuthTestCase):
         self.assertEqual(data_out['description'], data_in['description'])
         self.assertEqual(data_out['creator'], user.username)
 
+    def test_create_when_not_logged_in(self):
+        client = APIClient()
+        self.assertEqual(Collective.objects.count(), 0)
+        data_in = {
+            'name': 'jla',
+            'title': 'JLA',
+            'description': 'Justice League of America'
+        }
+        response = client.post('/api/collective/jla/', data_in)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(Collective.objects.count(), 0)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(data_out['detail'], 'Need to be logged in')
+
     def test_create_collective_already_exists(self):
         client = APIClient()
         user = self.create_user()

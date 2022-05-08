@@ -1,3 +1,5 @@
+# import logging
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import status
@@ -74,6 +76,8 @@ class CollectiveDetail(APIView):
     def post(self, request, name, format=None):
         if Collective.objects.filter(name=name).count() != 0:
             return Response({'detail': 'Collective {} already exists'.format(name)}, status=status.HTTP_400_BAD_REQUEST)
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Need to be logged in'.format(name)}, status=status.HTTP_401_UNAUTHORIZED)
         serializer = CollectiveSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(creator=request.user)
