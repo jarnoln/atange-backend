@@ -31,7 +31,7 @@ class UserInfo(APIView):
 
 class CollectiveList(APIView):
     def get(self, request, format=None):
-        collective_list = Collective.objects.all()
+        collective_list = Collective.objects.filter(is_visible=True)
         serializer = CollectiveSerializer(collective_list, many=True)
         return Response(serializer.data)
 
