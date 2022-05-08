@@ -1,6 +1,7 @@
 Django==4.0.4
-djangorestframework==3.13.1
+django-cors-headers==3.11.0
 django-filter==21.1  # Recommended by Django REST framework
+djangorestframework==3.13.1
 djoser==2.1.0  # REST implementation of Django authentication system
 Markdown==3.3.6  # Recommended by Django REST framework
 PyYAML==6.0  # Required by DRF to generate OpenAPI schema
