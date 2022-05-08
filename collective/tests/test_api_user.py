@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from .test_api_auth import AuthTestCase
+from .auth_test_case import AuthTestCase
 
 
 class UserInfoViewTests(AuthTestCase):
