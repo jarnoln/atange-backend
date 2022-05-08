@@ -23,11 +23,12 @@ class CollectiveListViewTests(AuthTestCase):
         self.assertEqual(len(data_out), 2)
         self.assertEqual(data_out[0]['name'], 'jla')
         self.assertEqual(data_out[0]['title'], 'JLA')
-        self.assertEqual(data_out[0]['description'], None)
+        self.assertTrue('description' not in data_out[0])
+        self.assertTrue('is_visible' not in data_out[0])
+        self.assertTrue('edited' not in data_out[0])
         self.assertEqual(data_out[0]['creator'], user.username)
         self.assertEqual(data_out[1]['name'], 'jsa')
         self.assertEqual(data_out[1]['title'], 'JSA')
-        self.assertEqual(data_out[1]['description'], None)
         self.assertEqual(data_out[1]['creator'], user.username)
 
     def test_get_empty_list_if_no_collectives(self):
@@ -59,3 +60,4 @@ class CollectiveListViewTests(AuthTestCase):
         self.assertEqual(len(data_out), 2)
         self.assertEqual(data_out[0]['name'], 'jla')
         self.assertEqual(data_out[1]['name'], 'jsa')
+

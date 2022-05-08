@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Collective
-from .serializers import CollectiveSerializer, UserInfoSerializer
+from .serializers import CollectiveSerializer, CollectiveListSerializer, UserInfoSerializer
 
 
 def index(request):
@@ -32,7 +32,7 @@ class UserInfo(APIView):
 class CollectiveList(APIView):
     def get(self, request, format=None):
         collective_list = Collective.objects.filter(is_visible=True)
-        serializer = CollectiveSerializer(collective_list, many=True)
+        serializer = CollectiveListSerializer(collective_list, many=True)
         return Response(serializer.data)
 
 

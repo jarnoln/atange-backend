@@ -21,4 +21,4 @@ class CollectiveListSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
     class Meta:
         model = Collective
-        fields = ['name', 'title', 'creator', 'created', 'edited']
+        fields = ['name', 'title', 'creator', 'created']
