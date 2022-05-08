@@ -30,6 +30,26 @@ class UserInfo(APIView):
 
 
 class CollectiveList(APIView):
+    """ List of public collectives
+
+    Example response:
+    -----------------
+
+    ```
+    [
+        {
+            "name":"jla",
+            "title":"JLA",
+            "created":"2022-03-07T06:39:58.410779Z"
+        },
+        {
+            "name":"jsa",
+            "title":"JSA",
+            "created":"2022-03-07T07:58:41.012390Z"
+        }
+    ]
+    ```
+    """
     def get(self, request, format=None):
         collective_list = Collective.objects.filter(is_visible=True)
         serializer = CollectiveListSerializer(collective_list, many=True)
@@ -37,6 +57,7 @@ class CollectiveList(APIView):
 
 
 class CollectiveDetail(APIView):
+    """ Endpoint for collective operations """
     def get(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
         serializer = CollectiveSerializer(collective)

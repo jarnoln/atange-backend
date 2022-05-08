@@ -48,11 +48,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'corsheaders',
     'collective'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -146,3 +148,12 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {},
 }
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000'  # Your front-end development server address here
+    ]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        # Your deployed front-end server address here
+    ]
