@@ -20,6 +20,17 @@ class RegisterViewTests(TestCase):
         self.assertEqual(data_out['username'], 'superman')
         self.assertEqual(data_out['email'], '')
 
+    def test_register_user_already_exists(self):
+        client = APIClient()
+        User.objects.create(username='superman')
+        self.assertEqual(User.objects.count(), 1)
+        data_in = {'username': 'superman', 'password': 'Man_of_Steel'}
+        response = client.post('/auth/users/', data_in)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(User.objects.count(), 1)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(data_out['username'], ['A user with that username already exists.'])
+
 
 class DeleteUserViewTests(AuthTestCase):
     def delete_user(self):
@@ -30,6 +41,16 @@ class DeleteUserViewTests(AuthTestCase):
         response = client.delete('/users/me/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(User.objects.count(), 0)
+
+    """
+    def delete_user_not_logged_in(self):
+        client = APIClient()
+        User.objects.create(username='superman')
+        self.assertEqual(User.objects.count(), 1)
+        response = client.delete('/users/me/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(User.objects.count(), 0)
+    """
 
 
 class LoginViewTests(TestCase):
@@ -42,6 +63,27 @@ class LoginViewTests(TestCase):
         data_out = json.loads(response.content.decode())
         self.assertTrue('auth_token' in data_out)
         self.assertEqual(len(data_out['auth_token']), 40)
+
+    def test_login_no_such_user(self):
+        client = APIClient()
+        login_data = {'username': 'superman', 'password': 'Man_of_Steel'}
+        response = client.post('/auth/token/login/', login_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data_out = json.loads(response.content.decode())
+        self.assertFalse('auth_token' in data_out)
+        # print(data_out['non_field_errors'])
+        self.assertEqual(data_out['non_field_errors'], ['Unable to log in with provided credentials.'])
+
+    def test_login_wrong_password(self):
+        client = APIClient()
+        user = User.objects.create_user(username='superman', password='Man_of_Steel')
+        login_data = {'username': 'superman', 'password': 'Man_of_Iron'}
+        response = client.post('/auth/token/login/', login_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data_out = json.loads(response.content.decode())
+        self.assertFalse('auth_token' in data_out)
+        # print(data_out['non_field_errors'])
+        self.assertEqual(data_out['non_field_errors'], ['Unable to log in with provided credentials.'])
 
 
 class UserDetailViewTests(AuthTestCase):
