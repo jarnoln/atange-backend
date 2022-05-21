@@ -6,8 +6,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Collective
-from .serializers import CollectiveSerializer, CollectiveListSerializer, UserInfoSerializer
+from .models import Collective, QuestionnaireItem
+from .serializers import CollectiveSerializer, CollectiveListSerializer, UserInfoSerializer, \
+    QuestionListSerializer
 
 
 def index(request):
@@ -94,3 +95,13 @@ class CollectiveDetail(APIView):
 
         collective.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CollectiveQuestions(APIView):
+    """ List of questions (and headers) in collective
+    """
+    def get(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        question_list = QuestionnaireItem.objects.filter(collective=collective).order_by('order')
+        serializer = QuestionListSerializer(question_list, many=True)
+        return Response(serializer.data)
