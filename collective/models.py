@@ -36,3 +36,20 @@ class QuestionnaireItem(models.Model):
 
     def __str__(self):
         return '{}:{}:{}:{}'.format(self.collective.name, self.item_type, self.name, self.title)
+
+
+class Answer(models.Model):
+    ANSWER_CHOICES = (
+        (-1, 'No'),
+        (0, 'Abstain'),
+        (1, 'Yes')
+    )
+    question = models.ForeignKey(QuestionnaireItem, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    vote = models.IntegerField(default=0, choices=ANSWER_CHOICES)
+    comment = models.TextField(null=True, blank=True, default='')
+    created = models.DateTimeField(auto_now_add=True)
+    edited = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{}:{}:{}:{}'.format(self.question.collective.name, self.user.username, self.question.title, self.vote)
