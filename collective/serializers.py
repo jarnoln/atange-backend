@@ -26,6 +26,15 @@ class CollectiveListSerializer(serializers.ModelSerializer):
         fields = ['name', 'title', 'creator', 'created']
 
 
+class QuestionSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source='creator.username')
+    parent = serializers.ReadOnlyField(source='parent.name')
+
+    class Meta:
+        model = QuestionnaireItem
+        fields = ['name', 'title', 'description', 'item_type', 'parent', 'order', 'creator', 'created']
+
+
 class QuestionListSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.username')
     parent = serializers.ReadOnlyField(source='parent.name')
