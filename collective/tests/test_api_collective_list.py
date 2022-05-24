@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -10,6 +11,9 @@ from collective.models import Collective
 
 
 class CollectiveListViewTests(AuthTestCase):
+    def test_reverse(self):
+        self.assertEqual(reverse('collectives'), '/api/collectives/')
+
     def test_get_collective_list(self):
         client = APIClient()
         user = self.create_user()
@@ -17,7 +21,7 @@ class CollectiveListViewTests(AuthTestCase):
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         Collective.objects.create(name='jla', title='JLA', creator=user)
         Collective.objects.create(name='jsa', title='JSA', creator=user)
-        response = client.get('/api/collectives/')
+        response = client.get(reverse('collectives'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 2)
@@ -36,7 +40,7 @@ class CollectiveListViewTests(AuthTestCase):
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get('/api/collectives/')
+        response = client.get(reverse('collectives'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 0)
@@ -47,17 +51,16 @@ class CollectiveListViewTests(AuthTestCase):
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         Collective.objects.create(name='tfx', title='Tass Force X', creator=user, is_visible=False)
-        response = client.get('/api/collectives/')
+        response = client.get(reverse('collectives'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 0)
         Collective.objects.create(name='jla', title='JLA', creator=user)
         Collective.objects.create(name='jsa', title='JSA', creator=user)
         self.assertEqual(Collective.objects.count(), 3)
-        response = client.get('/api/collectives/')
+        response = client.get(reverse('collectives'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 2)
         self.assertEqual(data_out[0]['name'], 'jla')
         self.assertEqual(data_out[1]['name'], 'jsa')
-

@@ -1,4 +1,5 @@
 import json
+from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -7,12 +8,15 @@ from .auth_test_case import AuthTestCase
 
 
 class UserInfoViewTests(AuthTestCase):
+    def test_reverse(self):
+        self.assertEqual(reverse('user_info', args=['superman']), '/api/user/superman/')
+
     def test_get_user_info(self):
         client = APIClient()
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get('/api/user/superman/')
+        response = client.get(reverse('user_info', args=['superman']))
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data_out['email'], 'clark@dailyplanet.com')
@@ -24,7 +28,7 @@ class UserInfoViewTests(AuthTestCase):
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get('/api/user/nobody/')
+        response = client.get(reverse('user_info', args=['nobody']))
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -38,7 +42,7 @@ class UserInfoViewTests(AuthTestCase):
             'first_name': 'Kal',
             'last_name': 'El'
         }
-        response = client.put('/api/user/superman/', data_in)
+        response = client.put(reverse('user_info', args=[user.username]), data_in)
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data_out['email'], 'kalel@krypton.planet')

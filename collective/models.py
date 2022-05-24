@@ -44,7 +44,7 @@ class Answer(models.Model):
         (0, 'Abstain'),
         (1, 'Yes')
     )
-    question = models.ForeignKey(QuestionnaireItem, on_delete=models.CASCADE)
+    question = models.ForeignKey(QuestionnaireItem, on_delete=models.CASCADE, related_name='answers')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     vote = models.IntegerField(default=0, choices=ANSWER_CHOICES)
     comment = models.TextField(null=True, blank=True, default='')
