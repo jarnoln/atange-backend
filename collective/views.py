@@ -107,6 +107,16 @@ class CollectiveQuestions(APIView):
         return Response(serializer.data)
 
 
+class CollectiveAnswers(APIView):
+    """ List of all answers in collective
+    """
+    def get(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        question_list = Answer.objects.filter(question__collective=collective).order_by('question__order')
+        serializer = AnswerSerializer(question_list, many=True)
+        return Response(serializer.data)
+
+
 class QuestionDetail(APIView):
     """ Endpoint for question operations """
     def get(self, request, collective_name, question_name, format=None):
