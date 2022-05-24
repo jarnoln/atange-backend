@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Collective, QuestionnaireItem
+from .models import Collective, QuestionnaireItem, Answer
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
@@ -42,3 +42,12 @@ class QuestionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionnaireItem
         fields = ['name', 'title', 'description', 'item_type', 'parent', 'order', 'creator', 'created']
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    question = serializers.ReadOnlyField(source='question.name')
+
+    class Meta:
+        model = Answer
+        fields = ['question', 'user', 'vote', 'comment']
