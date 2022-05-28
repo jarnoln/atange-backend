@@ -43,19 +43,24 @@ class CollectiveDetailViewTests(AuthTestCase):
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        collective = Collective.objects.create(name='jla', title='JLA', creator=user)
+        Collective.objects.create(name='jla', title='JLA', creator=user)
         data_in = {
             'name': 'section8',
             'title': 'Section 8',
             'description': 'Replaces old JLA'
         }
-        url = reverse('collective', args=[collective.name])
+        url = reverse('collective', args=['jla'])
         response = client.put(url, data_in)
+        self.assertEqual(Collective.objects.count(), 1)
+        collective = Collective.objects.first()
+        self.assertEqual(collective.name, data_in['name'])
+        self.assertEqual(collective.title, data_in['title'])
+        self.assertEqual(collective.description, data_in['description'])
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data_out['name'], 'section8')
-        self.assertEqual(data_out['title'], 'Section 8')
-        self.assertEqual(data_out['description'], 'Replaces old JLA')
+        self.assertEqual(data_out['name'], data_in['name'])
+        self.assertEqual(data_out['title'], data_in['title'])
+        self.assertEqual(data_out['description'], data_in['description'])
 
     def test_update_collective_when_not_creator(self):
         client = APIClient()
