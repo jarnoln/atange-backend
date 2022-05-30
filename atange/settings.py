@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 import sys
 
 from pathlib import Path
@@ -23,17 +24,33 @@ PROJECT_NAME = Path(__file__).parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-try:
-    from .passwords import SECRET_KEY
-except ImportError:
-    print('Password file does not exist. How to create it:')
-    print('python {}/generate_passwords.py {}/passwords.py'.format(PROJECT_NAME, PROJECT_NAME))
-    sys.exit(1)
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if SECRET_KEY == '':
+    try:
+        from .passwords import SECRET_KEY
+    except ImportError:
+        print('Password file does not exist. How to create it:')
+        print('python {}/generate_passwords.py {}/passwords.py'.format(PROJECT_NAME, PROJECT_NAME))
+        sys.exit(1)
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = []
+
+# SECURITY WARNING: don't run with debug turned on in production!
+if os.environ.get('RENDER'):
+    DEBUG = False
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    FRONTEND_URL = os.environ.get('FRONTEND_URL')
+    if FRONTEND_URL:
+        CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
+else:
+    DEBUG = True
+    CORS_ALLOWED_ORIGINS = [
+        'http://localhost:3000'  # Your front-end development server address here
+    ]
 
 
 # Application definition
@@ -162,12 +179,3 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {},
 }
-
-if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
-        'http://localhost:3000'  # Your front-end development server address here
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [
-        # Your deployed front-end server address here
-    ]
