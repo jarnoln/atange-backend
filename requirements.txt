@@ -5,3 +5,4 @@ djangorestframework==3.13.1
 djoser==2.1.0  # REST implementation of Django authentication system
 Markdown==3.3.7  # Recommended by Django REST framework
 PyYAML==6.0  # Required by DRF to generate OpenAPI schema
+whitenoise==6.1.0   For serving static files without configuring web server
