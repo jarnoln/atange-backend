@@ -8,10 +8,10 @@ class IndexViewTests(TestCase):
     def test_index_view(self):
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Index page")
+        self.assertContains(response, "Atange backend")
 
     def test_shows_statistics(self):
         Statistics.objects.create()
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Collectives')
+        self.assertContains(response, 'Statistics')
