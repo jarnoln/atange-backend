@@ -62,3 +62,26 @@ class Answer(models.Model):
             self.question.title,
             self.vote,
         )
+
+
+class Statistics(models.Model):
+    collectives = models.IntegerField(default=0)
+    questions = models.IntegerField(default=0)
+    answers = models.IntegerField(default=0)
+    users = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def update(self):
+        self.collectives = Collective.objects.count()
+        self.questions = QuestionnaireItem.objects.filter(item_type="Q").count()
+        self.answers = Answer.objects.count()
+        self.users = User.objects.count()
+
+    def __str__(self):
+        return "{}:{}:{}:{}:{}".format(
+            str(self.created),
+            self.collectives,
+            self.questions,
+            self.answers,
+            self.users,
+        )

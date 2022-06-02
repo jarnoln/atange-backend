@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from collective.models import Collective, QuestionnaireItem, Answer
+from collective.models import Collective, QuestionnaireItem, Answer, Statistics
 
 
 class CollectiveModelTests(TestCase):
@@ -77,3 +77,30 @@ class AnswerModelTests(TestCase):
         answer = Answer.objects.create(question=question, user=creator)
         self.assertEqual(answer.comment, "")
         self.assertEqual(answer.vote, 0)
+
+
+class StatisticsModelTests(TestCase):
+    def test_can_save_and_load(self):
+        statistics = Statistics()
+        statistics.save()
+        self.assertEqual(Statistics.objects.count(), 1)
+        self.assertEqual(Statistics.objects.first(), statistics)
+
+    def test_string(self):
+        statistics = Statistics.objects.create()
+        timestamp_string = str(statistics.created)
+        self.assertEqual(str(statistics), "{}:0:0:0:0".format(timestamp_string))
+
+    def test_default_values(self):
+        creator = User.objects.create_user(username="superman", password="Man_of_Steel")
+        collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
+        question = QuestionnaireItem.objects.create(
+            collective=collective, name="Q1", title="Question 1"
+        )
+        Answer.objects.create(question=question, user=creator)
+        statistics = Statistics.objects.create()
+        statistics.update()
+        self.assertEqual(statistics.collectives, 1)
+        self.assertEqual(statistics.questions, 1)
+        self.assertEqual(statistics.answers, 1)
+        self.assertEqual(statistics.users, 1)

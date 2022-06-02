@@ -53,7 +53,7 @@ if os.environ.get("RENDER"):
         ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
     FRONTEND_URLS = os.environ.get("FRONTEND_URLS")
     if FRONTEND_URLS:
-        CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(' ')
+        CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(" ")
 else:
     DEBUG = True
     CORS_ALLOWED_ORIGINS = [
