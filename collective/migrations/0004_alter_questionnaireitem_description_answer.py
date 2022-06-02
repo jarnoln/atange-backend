@@ -9,25 +9,50 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('collective', '0003_questionnaireitem'),
+        ("collective", "0003_questionnaireitem"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='questionnaireitem',
-            name='description',
-            field=models.TextField(blank=True, default='', null=True),
+            model_name="questionnaireitem",
+            name="description",
+            field=models.TextField(blank=True, default="", null=True),
         ),
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('vote', models.IntegerField(choices=[(-1, 'No'), (0, 'Abstain'), (1, 'Yes')], default=0)),
-                ('comment', models.TextField(blank=True, default='', null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('edited', models.DateTimeField(auto_now=True)),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='collective.questionnaireitem')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "vote",
+                    models.IntegerField(
+                        choices=[(-1, "No"), (0, "Abstain"), (1, "Yes")], default=0
+                    ),
+                ),
+                ("comment", models.TextField(blank=True, default="", null=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("edited", models.DateTimeField(auto_now=True)),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="collective.questionnaireitem",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

@@ -12,24 +12,26 @@ class RegisterViewTests(TestCase):
     def test_register_new_user(self):
         client = APIClient()
         self.assertEqual(User.objects.count(), 0)
-        data_in = {'username': 'superman', 'password': 'Man_of_Steel'}
-        response = client.post('/auth/users/', data_in)
+        data_in = {"username": "superman", "password": "Man_of_Steel"}
+        response = client.post("/auth/users/", data_in)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 1)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(data_out['username'], 'superman')
-        self.assertEqual(data_out['email'], '')
+        self.assertEqual(data_out["username"], "superman")
+        self.assertEqual(data_out["email"], "")
 
     def test_register_user_already_exists(self):
         client = APIClient()
-        User.objects.create(username='superman')
+        User.objects.create(username="superman")
         self.assertEqual(User.objects.count(), 1)
-        data_in = {'username': 'superman', 'password': 'Man_of_Steel'}
-        response = client.post('/auth/users/', data_in)
+        data_in = {"username": "superman", "password": "Man_of_Steel"}
+        response = client.post("/auth/users/", data_in)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 1)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(data_out['username'], ['A user with that username already exists.'])
+        self.assertEqual(
+            data_out["username"], ["A user with that username already exists."]
+        )
 
 
 class DeleteUserViewTests(AuthTestCase):
@@ -38,7 +40,7 @@ class DeleteUserViewTests(AuthTestCase):
         user = self.create_user()
         self.login(user)
         self.assertEqual(User.objects.count(), 1)
-        response = client.delete('/users/me/')
+        response = client.delete("/users/me/")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(User.objects.count(), 0)
 
@@ -56,34 +58,40 @@ class DeleteUserViewTests(AuthTestCase):
 class LoginViewTests(TestCase):
     def test_login(self):
         client = APIClient()
-        user = User.objects.create_user(username='superman', password='Man_of_Steel')
-        login_data = {'username': user.username, 'password': 'Man_of_Steel'}
-        response = client.post('/auth/token/login/', login_data)
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        login_data = {"username": user.username, "password": "Man_of_Steel"}
+        response = client.post("/auth/token/login/", login_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
-        self.assertTrue('auth_token' in data_out)
-        self.assertEqual(len(data_out['auth_token']), 40)
+        self.assertTrue("auth_token" in data_out)
+        self.assertEqual(len(data_out["auth_token"]), 40)
 
     def test_login_no_such_user(self):
         client = APIClient()
-        login_data = {'username': 'superman', 'password': 'Man_of_Steel'}
-        response = client.post('/auth/token/login/', login_data)
+        login_data = {"username": "superman", "password": "Man_of_Steel"}
+        response = client.post("/auth/token/login/", login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data_out = json.loads(response.content.decode())
-        self.assertFalse('auth_token' in data_out)
+        self.assertFalse("auth_token" in data_out)
         # print(data_out['non_field_errors'])
-        self.assertEqual(data_out['non_field_errors'], ['Unable to log in with provided credentials.'])
+        self.assertEqual(
+            data_out["non_field_errors"],
+            ["Unable to log in with provided credentials."],
+        )
 
     def test_login_wrong_password(self):
         client = APIClient()
-        user = User.objects.create_user(username='superman', password='Man_of_Steel')
-        login_data = {'username': 'superman', 'password': 'Man_of_Iron'}
-        response = client.post('/auth/token/login/', login_data)
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        login_data = {"username": "superman", "password": "Man_of_Iron"}
+        response = client.post("/auth/token/login/", login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         data_out = json.loads(response.content.decode())
-        self.assertFalse('auth_token' in data_out)
+        self.assertFalse("auth_token" in data_out)
         # print(data_out['non_field_errors'])
-        self.assertEqual(data_out['non_field_errors'], ['Unable to log in with provided credentials.'])
+        self.assertEqual(
+            data_out["non_field_errors"],
+            ["Unable to log in with provided credentials."],
+        )
 
 
 class UserDetailViewTests(AuthTestCase):
@@ -91,16 +99,16 @@ class UserDetailViewTests(AuthTestCase):
         client = APIClient()
         user = self.create_user()
         token = self.login(user)
-        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get('/auth/users/me/')
+        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        response = client.get("/auth/users/me/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(data_out['username'], user.username)
-        self.assertEqual(data_out['email'], user.email)
+        self.assertEqual(data_out["username"], user.username)
+        self.assertEqual(data_out["email"], user.email)
 
     def test_user_details_no_auth(self):
         client = APIClient()
-        response = client.get('/auth/users/me/')
+        response = client.get("/auth/users/me/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -109,11 +117,11 @@ class LogoutViewTests(AuthTestCase):
         client = APIClient()
         user = self.create_user()
         token = self.login(user)
-        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.post('/auth/token/logout/', {})
+        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        response = client.post("/auth/token/logout/", {})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_logout_no_auth(self):
         client = APIClient()
-        response = client.post('/auth/token/logout/', {})
+        response = client.post("/auth/token/logout/", {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

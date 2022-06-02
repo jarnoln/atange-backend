@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class CollectiveConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'collective'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "collective"

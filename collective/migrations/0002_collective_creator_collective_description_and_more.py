@@ -9,28 +9,34 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('collective', '0001_initial'),
+        ("collective", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collective',
-            name='creator',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="collective",
+            name="creator",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='collective',
-            name='description',
+            model_name="collective",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='collective',
-            name='is_visible',
+            model_name="collective",
+            name="is_visible",
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name='collective',
-            name='name',
+            model_name="collective",
+            name="name",
             field=models.SlugField(max_length=100),
         ),
     ]

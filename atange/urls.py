@@ -19,17 +19,23 @@ from rest_framework.schemas import get_schema_view
 
 
 urlpatterns = [
-    path('', include('collective.urls')),
-    path('api-auth/', include('rest_framework.urls')),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
-    path('admin/', admin.site.urls),
-    path('api/', get_schema_view(
-        title='Atange',
-        description='API for Atange backend',
-        version='0.1'), name='openapi-schema'),
-    path('openapi', get_schema_view(
-        title='Atange',
-        description='API for Atange backend',
-        version='0.1'), name='openapi-schema'),
+    path("", include("collective.urls")),
+    path("api-auth/", include("rest_framework.urls")),
+    path("auth/", include("djoser.urls")),
+    path("auth/", include("djoser.urls.authtoken")),
+    path("admin/", admin.site.urls),
+    path(
+        "api/",
+        get_schema_view(
+            title="Atange", description="API for Atange backend", version="0.1"
+        ),
+        name="openapi-schema",
+    ),
+    path(
+        "openapi",
+        get_schema_view(
+            title="Atange", description="API for Atange backend", version="0.1"
+        ),
+        name="openapi-schema",
+    ),
 ]
