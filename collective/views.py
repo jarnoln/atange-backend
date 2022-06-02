@@ -14,12 +14,12 @@ from .serializers import (
     QuestionSerializer,
     AnswerSerializer,
 )
-from .models import Collective, QuestionnaireItem, Answer
+from .models import Collective, QuestionnaireItem, Answer, Statistics
 
 
 def index(request):
-    collectives = Collective.objects.all()
-    context = {"collectives": collectives}
+    statistics = Statistics.objects.order_by('-created')
+    context = {"statistics": statistics}
     return render(request, "collective/index.html", context)
 
 
@@ -100,6 +100,8 @@ class CollectiveDetail(APIView):
         serializer = CollectiveSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(creator=request.user)
+            statistics = Statistics.objects.create()
+            statistics.update()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,6 +114,8 @@ class CollectiveDetail(APIView):
             )
 
         collective.delete()
+        statistics = Statistics.objects.create()
+        statistics.update()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -186,6 +190,8 @@ class QuestionDetail(APIView):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(collective=collective, creator=request.user)
+            statistics = Statistics.objects.create()
+            statistics.update()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -201,6 +207,8 @@ class QuestionDetail(APIView):
             )
 
         question.delete()
+        statistics = Statistics.objects.create()
+        statistics.update()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -235,6 +243,8 @@ class AnswerDetail(APIView):
         if serializer.is_valid():
             serializer.save()
             if created:
+                statistics = Statistics.objects.create()
+                statistics.update()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.data, status=status.HTTP_200_OK)

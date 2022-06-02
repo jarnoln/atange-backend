@@ -76,6 +76,7 @@ class Statistics(models.Model):
         self.questions = QuestionnaireItem.objects.filter(item_type="Q").count()
         self.answers = Answer.objects.count()
         self.users = User.objects.count()
+        self.save()
 
     def __str__(self):
         return "{}:{}:{}:{}:{}".format(

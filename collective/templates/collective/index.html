@@ -5,14 +5,31 @@
 {% block content %}
 
 <h1>Index page</h1>
-{% if collectives %}
-  <ul>
-    {% for collective in collectives %}
-      <li> {{ collective.title }} </li>
-    {% endfor %}
-  </ul>
+{% if statistics %}
+<table>
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Collectives</th>
+      <th>Questions</th>
+      <th>Answers</th>
+      <th>Users</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for stat in statistics %}
+    <tr>
+      <td>{{ stat.created|date:"Y-m-d H:i e" }}</td>
+      <td style="text-align: end">{{ stat.collectives }}</td>
+      <td style="text-align: end">{{ stat.questions }}</td>
+      <td style="text-align: end">{{ stat.answers }}</td>
+      <td style="text-align: end">{{ stat.users }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
 {% else %}
-  <p> No collectives created</p>
+  <p> Nothing here yet</p>
 {% endif %}
 
 {% endblock %}
