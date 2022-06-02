@@ -41,6 +41,7 @@ class QuestionListViewTests(AuthTestCase):
         self.assertEqual(data_out[0]["item_type"], "Q")
         self.assertEqual(data_out[0]["order"], 1)
         self.assertEqual(len(data_out[0]["answers"]), 1)
+        self.assertEqual(data_out[1]["answers"][0]["user"], user.username)
         self.assertEqual(data_out[0]["answers"][0]["vote"], 1)
         self.assertEqual(data_out[0]["answers"][0]["comment"], "Of course")
         # self.assertEqual(data_out[0]['parent'], 'Question 1')
@@ -51,6 +52,7 @@ class QuestionListViewTests(AuthTestCase):
         self.assertEqual(data_out[1]["order"], 2)
         self.assertEqual(data_out[1]["creator"], user.username)
         self.assertEqual(len(data_out[0]["answers"]), 1)
+        self.assertEqual(data_out[1]["answers"][0]["user"], user.username)
         self.assertEqual(data_out[1]["answers"][0]["vote"], -1)
         self.assertEqual(data_out[1]["answers"][0]["comment"], "Definitely not")
 
