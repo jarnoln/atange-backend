@@ -67,7 +67,17 @@ class QuestionSerializer(serializers.ModelSerializer):
 class QuestionListSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source="creator.username")
     parent = serializers.ReadOnlyField(source="parent.name")
+    answers = AnswerSerializer(many=True, read_only=True)
 
     class Meta:
         model = QuestionnaireItem
-        fields = ["name", "title", "item_type", "parent", "order", "creator"]
+        fields = [
+            "name",
+            "title",
+            "item_type",
+            "parent",
+            "order",
+            "description",
+            "creator",
+            "answers",
+        ]

@@ -37,9 +37,7 @@ class AnswerListViewTests(AuthTestCase):
             order=2,
             creator=creator,
         )
-        Answer.objects.create(
-            question=q_1, user=user, vote=1, comment="Of course"
-        )
+        Answer.objects.create(question=q_1, user=user, vote=1, comment="Of course")
         Answer.objects.create(
             question=q_2, user=user, vote=-1, comment="Definitely not"
         )

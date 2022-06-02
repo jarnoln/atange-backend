@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from .auth_test_case import AuthTestCase
-from collective.models import Collective, QuestionnaireItem
+from collective.models import Answer, Collective, QuestionnaireItem
 
 
 class QuestionListViewTests(AuthTestCase):
@@ -21,11 +21,15 @@ class QuestionListViewTests(AuthTestCase):
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION="Token " + token)
         collective = Collective.objects.create(name="jla", title="JLA", creator=user)
-        QuestionnaireItem.objects.create(
+        q_1 = QuestionnaireItem.objects.create(
             collective=collective, name="q1", title="Question 1", order=1, creator=user
         )
-        QuestionnaireItem.objects.create(
+        q_2 = QuestionnaireItem.objects.create(
             collective=collective, name="q2", title="Question 2", order=2, creator=user
+        )
+        Answer.objects.create(question=q_1, user=user, vote=1, comment="Of course")
+        Answer.objects.create(
+            question=q_2, user=user, vote=-1, comment="Definitely not"
         )
         url = reverse("questions", args=[collective.name])
         response = client.get(url)
@@ -36,6 +40,9 @@ class QuestionListViewTests(AuthTestCase):
         self.assertEqual(data_out[0]["title"], "Question 1")
         self.assertEqual(data_out[0]["item_type"], "Q")
         self.assertEqual(data_out[0]["order"], 1)
+        self.assertEqual(len(data_out[0]["answers"]), 1)
+        self.assertEqual(data_out[0]["answers"][0]["vote"], 1)
+        self.assertEqual(data_out[0]["answers"][0]["comment"], "Of course")
         # self.assertEqual(data_out[0]['parent'], 'Question 1')
         self.assertEqual(data_out[0]["creator"], user.username)
         self.assertEqual(data_out[1]["name"], "q2")
@@ -43,6 +50,9 @@ class QuestionListViewTests(AuthTestCase):
         self.assertEqual(data_out[1]["item_type"], "Q")
         self.assertEqual(data_out[1]["order"], 2)
         self.assertEqual(data_out[1]["creator"], user.username)
+        self.assertEqual(len(data_out[0]["answers"]), 1)
+        self.assertEqual(data_out[1]["answers"][0]["vote"], -1)
+        self.assertEqual(data_out[1]["answers"][0]["comment"], "Definitely not")
 
     def test_get_empty_list_if_no_questions(self):
         client = APIClient()
