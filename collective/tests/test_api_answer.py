@@ -73,6 +73,29 @@ class AnswerDetailViewTests(AuthTestCase):
         self.assertEqual(data_out["vote"], -1)
         self.assertEqual(data_out["comment"], "Actually maybe not")
 
+    def test_update_answer_that_does_not_exist_creates_answer(self):
+        client = APIClient()
+        user = self.create_user()
+        token = self.login(user)
+        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        creator = User.objects.create(username="batman", password="ImBatman")
+        collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
+        question = QuestionnaireItem.objects.create(
+            collective=collective, name="q1", title="Question 1", creator=creator
+        )
+        self.assertEqual(Answer.objects.count(), 0)
+        data_in = {"vote": -1, "comment": "Actually maybe not"}
+        url = reverse("answer", args=[collective.name, question.name, user.username])
+        response = client.put(url, data_in)
+        self.assertEqual(Answer.objects.count(), 1)
+        answer = Answer.objects.first()
+        self.assertEqual(answer.vote, -1)
+        self.assertEqual(answer.comment, "Actually maybe not")
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(data_out["vote"], -1)
+        self.assertEqual(data_out["comment"], "Actually maybe not")
+
     def test_update_answer_by_someone_else(self):
         client = APIClient()
         user = self.create_user()

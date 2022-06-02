@@ -81,7 +81,7 @@ class LoginViewTests(TestCase):
 
     def test_login_wrong_password(self):
         client = APIClient()
-        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        User.objects.create_user(username="superman", password="Man_of_Steel")
         login_data = {"username": "superman", "password": "Man_of_Iron"}
         response = client.post("/auth/token/login/", login_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

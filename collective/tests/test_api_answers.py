@@ -37,10 +37,10 @@ class AnswerListViewTests(AuthTestCase):
             order=2,
             creator=creator,
         )
-        a_1 = Answer.objects.create(
+        Answer.objects.create(
             question=q_1, user=user, vote=1, comment="Of course"
         )
-        a_2 = Answer.objects.create(
+        Answer.objects.create(
             question=q_2, user=user, vote=-1, comment="Definitely not"
         )
         url = reverse("answers", args=[collective.name])
@@ -64,14 +64,14 @@ class AnswerListViewTests(AuthTestCase):
         client.credentials(HTTP_AUTHORIZATION="Token " + token)
         creator = User.objects.create(username="batman", password="ImBatman")
         collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
-        q_1 = QuestionnaireItem.objects.create(
+        QuestionnaireItem.objects.create(
             collective=collective,
             name="q1",
             title="Question 1",
             order=1,
             creator=creator,
         )
-        q_2 = QuestionnaireItem.objects.create(
+        QuestionnaireItem.objects.create(
             collective=collective,
             name="q2",
             title="Question 2",

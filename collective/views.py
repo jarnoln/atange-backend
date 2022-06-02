@@ -229,11 +229,15 @@ class AnswerDetail(APIView):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        answer = get_object_or_404(Answer, question=question, user=user)
+        # answer = get_object_or_404(Answer, question=question, user=user)
+        answer, created = Answer.objects.get_or_create(question=question, user=user)
         serializer = AnswerSerializer(answer, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            if created:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, collective_name, question_name, username, format=None):
