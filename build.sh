@@ -6,6 +6,7 @@ pip install pip --upgrade
 pip install -r requirements.txt
 pip install gunicorn
 
+sleep 10
 ls /var/data
 touch /var/data/db.sqlite3
 
