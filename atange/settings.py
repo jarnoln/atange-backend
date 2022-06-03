@@ -54,8 +54,9 @@ if os.environ.get("RENDER"):
     FRONTEND_URLS = os.environ.get("FRONTEND_URLS")
     if FRONTEND_URLS:
         CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(" ")
-    # SQLITE_FILE_PATH = os.environ.get("SQLITE_FILE_PATH")
-    SQLITE_FILE_PATH = "/var/data/db.sqlite3"
+    SQLITE_FILE_PATH = os.environ.get("SQLITE_FILE_PATH")
+    if not os.path.exists(SQLITE_FILE_PATH):
+        SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
 else:
     DEBUG = True
     SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
