@@ -2,6 +2,7 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
+from django.conf import settings
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,7 +20,7 @@ from .models import Collective, QuestionnaireItem, Answer, Statistics
 
 def index(request):
     statistics = Statistics.objects.order_by("-created")
-    context = {"statistics": statistics}
+    context = {"statistics": statistics, "settings": settings}
     return render(request, "collective/index.html", context)
 
 

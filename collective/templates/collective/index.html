@@ -34,6 +34,10 @@
 {% endfor %}
   </tbody>
 </table>
+<p> SQLITE_FILE_PATH: {{ settings.SQLITE_FILE_PATH }}</p>
+<p> CORS_ALLOWED_ORIGINS: {{ settings.CORS_ALLOWED_ORIGINS }}</p>
+<p> ALLOWED_HOSTS: {{ settings.ALLOWED_HOSTS }}</p>
+
 {% else %}
   <p> Nothing here yet</p>
 {% endif %}
