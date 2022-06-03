@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 import sys
+import dj_database_url
 
 from pathlib import Path
 
@@ -56,12 +57,23 @@ if os.environ.get("RENDER"):
         CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(" ")
     # SQLITE_FILE_PATH = os.environ.get("SQLITE_FILE_PATH")
     SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
+    DB_CONNECTION_STRING = os.environ.get("DB_CONNECTION_STRING")
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DB_CONNECTION_STRING,
+            conn_max_age=600
+        )
+    }
+
 else:
     DEBUG = True
     SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:3000"  # Your front-end development server address here
     ]
+    DATABASES = {
+        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
+    }
 
 # Application definition
 
@@ -114,10 +126,6 @@ WSGI_APPLICATION = "atange.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
-}
 
 
 # Password validation
