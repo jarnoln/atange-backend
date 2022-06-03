@@ -54,12 +54,13 @@ if os.environ.get("RENDER"):
     FRONTEND_URLS = os.environ.get("FRONTEND_URLS")
     if FRONTEND_URLS:
         CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(" ")
+    SQLITE_FILE_PATH = os.path.join(os.environ.get("SQLITE_PATH"), "db.sqlite3")
 else:
     DEBUG = True
+    SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:3000"  # Your front-end development server address here
     ]
-
 
 # Application definition
 
@@ -114,10 +115,7 @@ WSGI_APPLICATION = "atange.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
 }
 
 

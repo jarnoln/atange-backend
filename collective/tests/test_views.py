@@ -14,4 +14,4 @@ class IndexViewTests(TestCase):
         Statistics.objects.create()
         response = self.client.get(reverse("index"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Statistics')
+        self.assertContains(response, "Statistics")

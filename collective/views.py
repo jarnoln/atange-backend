@@ -18,7 +18,7 @@ from .models import Collective, QuestionnaireItem, Answer, Statistics
 
 
 def index(request):
-    statistics = Statistics.objects.order_by('-created')
+    statistics = Statistics.objects.order_by("-created")
     context = {"statistics": statistics}
     return render(request, "collective/index.html", context)
 
