@@ -13,6 +13,12 @@ class Collective(models.Model):
     )
     edited = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+    def get_permissions(self, user):
+        return {
+            'can_edit': user == self.creator,
+            'can_join': False
+        }
+
     def __str__(self):
         return "{}:{}".format(self.name, self.title)
 

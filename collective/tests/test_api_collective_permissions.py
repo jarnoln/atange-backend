@@ -24,6 +24,7 @@ class CollectivePermissionsTests(AuthTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], True)
+        self.assertEqual(data_out["can_join"], False)
 
     def test_get_collective_permissions_when_not_creator(self):
         client = APIClient()
@@ -36,6 +37,7 @@ class CollectivePermissionsTests(AuthTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], False)
+        self.assertEqual(data_out["can_join"], False)
 
     def test_get_collective_permissions_when_not_logged_in(self):
         client = APIClient()
@@ -45,3 +47,4 @@ class CollectivePermissionsTests(AuthTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], False)
+        self.assertEqual(data_out["can_join"], False)

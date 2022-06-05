@@ -149,10 +149,7 @@ class CollectivePermissions(APIView):
 
     def get(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
-        can_edit = False
-        if request.user == collective.creator:
-            can_edit = True
-        return Response({'can_edit': can_edit})
+        return Response(collective.get_permissions(request.user))
 
 
 class QuestionDetail(APIView):
