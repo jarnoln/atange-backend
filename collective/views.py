@@ -144,6 +144,17 @@ class CollectiveAnswers(APIView):
         return Response(serializer.data)
 
 
+class CollectivePermissions(APIView):
+    """List current user's permissions in collective"""
+
+    def get(self, request, name, format=None):
+        collective = get_object_or_404(Collective, name=name)
+        can_edit = False
+        if request.user == collective.creator:
+            can_edit = True
+        return Response({'can_edit': can_edit})
+
+
 class QuestionDetail(APIView):
     """Endpoint for question operations"""
 
