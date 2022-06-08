@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -14,10 +16,14 @@ class Collective(models.Model):
     edited = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def get_permissions(self, user):
-        return {
+        logger = logging.getLogger(__name__)
+        logger.debug('Collective:get_permissions user:{}'.format(user))
+        permissions = {
             'can_edit': user == self.creator,
             'can_join': False
         }
+        logger.debug('  permissions:{}'.format(permissions))
+        return permissions
 
     def __str__(self):
         return "{}:{}".format(self.name, self.title)

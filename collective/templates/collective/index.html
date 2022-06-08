@@ -9,6 +9,19 @@
 <p>
   <a href="/api/">API</a>
 </p>
+{% if users %}
+<p>Users:
+  {% for user in users %}
+      [{{ user.username }}]
+  {% endfor %}
+</p>
+{% endif %}
+<h2>Settings</h2>
+<ul>
+  <li> SQLITE_FILE_PATH: {{ settings.SQLITE_FILE_PATH }}</li>
+  <li> CORS_ALLOWED_ORIGINS: {{ settings.CORS_ALLOWED_ORIGINS }}</li>
+  <li> ALLOWED_HOSTS: {{ settings.ALLOWED_HOSTS }}</li>
+</ul>
 
 {% if statistics %}
 <h2>Statistics</h2>
@@ -34,10 +47,6 @@
 {% endfor %}
   </tbody>
 </table>
-<p> SQLITE_FILE_PATH: {{ settings.SQLITE_FILE_PATH }}</p>
-<p> CORS_ALLOWED_ORIGINS: {{ settings.CORS_ALLOWED_ORIGINS }}</p>
-<p> ALLOWED_HOSTS: {{ settings.ALLOWED_HOSTS }}</p>
-
 {% else %}
   <p> Nothing here yet</p>
 {% endif %}
