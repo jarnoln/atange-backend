@@ -20,12 +20,8 @@ from .models import Collective, QuestionnaireItem, Answer, Statistics
 
 def index(request):
     statistics = Statistics.objects.order_by("-created")
-    users = User.objects.order_by('username')
-    context = {
-        "settings": settings,
-        "statistics": statistics,
-        "users": users
-    }
+    users = User.objects.order_by("username")
+    context = {"settings": settings, "statistics": statistics, "users": users}
     return render(request, "collective/index.html", context)
 
 
@@ -83,8 +79,8 @@ class CollectiveDetail(APIView):
     def put(self, request, name, format=None):
         collective = get_object_or_404(Collective, name=name)
         logger = logging.getLogger(__name__)
-        logger.debug('CollectiveDetail:put collective_name:{}'.format(name))
-        logger.debug(' request.user:{}'.format(request.user))
+        logger.debug("CollectiveDetail:put collective_name:{}".format(name))
+        logger.debug(" request.user:{}".format(request.user))
         if request.user != collective.creator:
             return Response(
                 {"detail": "Only creator can edit"}, status=status.HTTP_401_UNAUTHORIZED

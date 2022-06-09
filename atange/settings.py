@@ -60,8 +60,7 @@ if os.environ.get("RENDER"):
     DB_CONNECTION_STRING = os.environ.get("DB_CONNECTION_STRING")
     DATABASES = {
         "default": dj_database_url.config(
-            default=DB_CONNECTION_STRING,
-            conn_max_age=600
+            default=DB_CONNECTION_STRING, conn_max_age=600
         )
     }
 

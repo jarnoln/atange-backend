@@ -79,7 +79,7 @@ class DeleteUserViewTests(AuthTestCase):
         token = self.login(user)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         self.assertEqual(User.objects.count(), 1)
-        response = self.client.delete(self.url, {'current_password': 'wrong_password'})
+        response = self.client.delete(self.url, {"current_password": "wrong_password"})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 1)
 

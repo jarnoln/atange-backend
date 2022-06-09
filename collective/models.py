@@ -17,12 +17,9 @@ class Collective(models.Model):
 
     def get_permissions(self, user):
         logger = logging.getLogger(__name__)
-        logger.debug('Collective:get_permissions user:{}'.format(user))
-        permissions = {
-            'can_edit': user == self.creator,
-            'can_join': False
-        }
-        logger.debug('  permissions:{}'.format(permissions))
+        logger.debug("Collective:get_permissions user:{}".format(user))
+        permissions = {"can_edit": user == self.creator, "can_join": False}
+        logger.debug("  permissions:{}".format(permissions))
         return permissions
 
     def __str__(self):
