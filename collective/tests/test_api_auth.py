@@ -35,24 +35,52 @@ class RegisterViewTests(TestCase):
 
 
 class DeleteUserViewTests(AuthTestCase):
-    def delete_user(self):
-        client = APIClient()
+    def setUp(self):
+        self.client = APIClient()
+        self.url = "/auth/users/me/"
+        self.data_in = {"current_password": "Man_of_Steel"}
+
+    def test_delete_user(self):
         user = self.create_user()
-        self.login(user)
+        token = self.login(user)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         self.assertEqual(User.objects.count(), 1)
-        response = client.delete("/users/me/")
+        response = self.client.delete(self.url, self.data_in)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(User.objects.count(), 0)
 
-    """
-    def delete_user_not_logged_in(self):
-        client = APIClient()
-        User.objects.create(username='superman')
+    def test_delete_user_not_logged_in(self):
+        User.objects.create(username="superman")
         self.assertEqual(User.objects.count(), 1)
-        response = client.delete('/users/me/')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(User.objects.count(), 0)
-    """
+        response = self.client.delete(self.url, self.data_in)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_delete_user_no_token(self):
+        user = self.create_user()
+        self.login(user)
+        self.assertEqual(User.objects.count(), 1)
+        response = self.client.delete(self.url, self.data_in)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_delete_user_no_password(self):
+        user = self.create_user()
+        token = self.login(user)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.assertEqual(User.objects.count(), 1)
+        response = self.client.delete(self.url, {})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(User.objects.count(), 1)
+
+    def test_delete_user_wrong_password(self):
+        user = self.create_user()
+        token = self.login(user)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.assertEqual(User.objects.count(), 1)
+        response = self.client.delete(self.url, {'current_password': 'wrong_password'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(User.objects.count(), 1)
 
 
 class LoginViewTests(TestCase):
