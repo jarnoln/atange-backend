@@ -11,16 +11,18 @@ from collective.models import Collective, QuestionnaireItem, Answer
 
 
 class QuestionDetailViewTests(AuthTestCase):
+    def setUp(self):
+        self.client = APIClient()
+
     def test_reverse(self):
         self.assertEqual(
             reverse("question", args=["jla", "q1"]), "/api/collective/jla/question/q1/"
         )
 
     def test_get_question_detail(self):
-        client = APIClient()
         user = self.create_user()
         token = self.login(user)
-        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         collective = Collective.objects.create(name="jla", title="JLA", creator=user)
         question = QuestionnaireItem.objects.create(
             collective=collective, name="q1", title="Question 1", creator=user
@@ -29,7 +31,7 @@ class QuestionDetailViewTests(AuthTestCase):
             question=question, user=user, vote=1, comment="Of course"
         )
         url = reverse("question", args=[collective.name, question.name])
-        response = client.get(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["name"], "q1")
@@ -41,54 +43,70 @@ class QuestionDetailViewTests(AuthTestCase):
         self.assertEqual(data_out["answers"][0]["comment"], answer.comment)
 
     def test_no_such_question(self):
-        client = APIClient()
         user = self.create_user()
         token = self.login(user)
         collective = Collective.objects.create(name="jla", title="JLA", creator=user)
-        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         url = reverse("question", args=[collective.name, "unknown"])
-        response = client.get(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_question(self):
-        client = APIClient()
         user = self.create_user()
         token = self.login(user)
-        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         collective = Collective.objects.create(name="jla", title="JLA", creator=user)
         question = QuestionnaireItem.objects.create(
-            collective=collective, name="q1", title="Question 1", creator=user
+            collective=collective,
+            name="q1",
+            title="Question 1",
+            order=13,
+            item_type="Q",
+            creator=user,
         )
+        self.assertEqual(QuestionnaireItem.objects.count(), 1)
         data_in = {
             "name": "q2",
             "title": "Question 2",
             "description": "A simple question",
+            "order": 1337,
         }
         url = reverse("question", args=[collective.name, question.name])
-        response = client.put(url, data_in)
+
+        response = self.client.put(url, data_in)
+
+        self.assertEqual(QuestionnaireItem.objects.count(), 1)
+        question = QuestionnaireItem.objects.first()
+        self.assertEqual(question.name, data_in["name"])
+        self.assertEqual(question.title, data_in["title"])
+        self.assertEqual(question.description, data_in["description"])
+        self.assertEqual(question.order, data_in["order"])
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data_out["name"], "q2")
-        self.assertEqual(data_out["title"], "Question 2")
-        self.assertEqual(data_out["description"], "A simple question")
+        self.assertEqual(data_out["name"], data_in["name"])
+        self.assertEqual(data_out["title"], data_in["title"])
+        self.assertEqual(data_out["description"], data_in["description"])
+        self.assertEqual(data_out["order"], data_in["order"])
 
     def test_update_question_when_not_creator(self):
-        client = APIClient()
         user = self.create_user()
         token = self.login(user)
-        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         creator = User.objects.create(username="batman", password="ImBatman")
         collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
         question = QuestionnaireItem.objects.create(
             collective=collective, name="q1", title="Question 1", creator=creator
         )
+        self.assertEqual(QuestionnaireItem.objects.count(), 1)
         data_in = {
             "name": "q2",
             "title": "Question 2",
             "description": "A simple question",
         }
         url = reverse("question", args=[collective.name, question.name])
-        response = client.put(url, data_in)
+
+        response = self.client.put(url, data_in)
+
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(data_out["detail"], "Only creator can edit")
@@ -100,18 +118,32 @@ class QuestionDetailViewTests(AuthTestCase):
         client.credentials(HTTP_AUTHORIZATION="Token " + token)
         collective = Collective.objects.create(name="jla", title="JLA", creator=user)
         self.assertEqual(QuestionnaireItem.objects.count(), 0)
-        data_in = {"name": "q1", "title": "Question 1", "description": "Hard question"}
+        data_in = {
+            "name": "q1",
+            "title": "Question 1",
+            "description": "Hard question",
+            "item_type": "H",
+            "order": 13,
+        }
         url = reverse("question", args=[collective.name, "q1"])
+
         response = client.post(url, data_in)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(QuestionnaireItem.objects.count(), 1)
         question = QuestionnaireItem.objects.first()
         self.assertEqual(question.name, data_in["name"])
+        self.assertEqual(question.title, data_in["title"])
+        self.assertEqual(question.description, data_in["description"])
+        self.assertEqual(question.item_type, data_in["item_type"])
+        self.assertEqual(question.order, data_in["order"])
         self.assertEqual(question.creator, user)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["name"], data_in["name"])
         self.assertEqual(data_out["title"], data_in["title"])
         self.assertEqual(data_out["description"], data_in["description"])
+        self.assertEqual(data_out["item_type"], data_in["item_type"])
+        self.assertEqual(data_out["order"], data_in["order"])
         self.assertEqual(data_out["creator"], user.username)
 
     def test_create_when_not_logged_in(self):
