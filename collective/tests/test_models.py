@@ -1,7 +1,35 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from collective.models import Collective, QuestionnaireItem, Answer, Statistics
+from collective.models import UserGroup, Membership, Collective, QuestionnaireItem, Answer, Statistics
+
+
+class UserGroupModelTests(TestCase):
+    def test_can_save_and_load(self):
+        user_group = UserGroup(name="admins", title="Administrators")
+        user_group.save()
+        self.assertEqual(UserGroup.objects.count(), 1)
+        self.assertEqual(UserGroup.objects.first(), user_group)
+
+    def test_string(self):
+        user_group = UserGroup.objects.create(name="admins", title="Admins")
+        self.assertEqual(str(user_group), "admins:Admins")
+
+
+class MembershipModelTests(TestCase):
+    def test_can_save_and_load(self):
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        user_group = UserGroup.objects.create(name="admins", title="Admins")
+        membership = Membership(user=user, group=user_group)
+        membership.save()
+        self.assertEqual(Membership.objects.count(), 1)
+        self.assertEqual(Membership.objects.first(), membership)
+
+    def test_string(self):
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        user_group = UserGroup.objects.create(name="admins", title="Admins")
+        membership = Membership.objects.create(user=user, group=user_group)
+        self.assertEqual(str(membership), "superman:admins")
 
 
 class CollectiveModelTests(TestCase):
