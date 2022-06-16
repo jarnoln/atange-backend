@@ -94,6 +94,21 @@ class CollectiveDetailViewTests(AuthTestCase):
         self.assertEqual(data_out["description"], data_in["description"])
         self.assertEqual(data_out["creator"], self.user.username)
 
+    def test_create_collective_creates_also_member_and_admin_groups(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
+        self.assertEqual(Collective.objects.count(), 0)
+        data_in = {"name": "jla", "title": "JLA", "description": ""}
+        url = reverse("collective", args=["jla"])
+        self.assertEqual(UserGroup.objects.count(), 0)
+        response = self.client.post(url, data_in)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Collective.objects.count(), 1)
+        self.assertEqual(UserGroup.objects.count(), 2)
+        collective = Collective.objects.first()
+        # Creator is automatically member of admin group but not member group
+        self.assertFalse(collective.member_group.is_member(self.user))
+        self.assertTrue(collective.admin_group.is_member(self.user))
+
     def test_create_when_not_logged_in(self):
         self.assertEqual(Collective.objects.count(), 0)
         data_in = {

@@ -15,7 +15,7 @@ from .serializers import (
     QuestionSerializer,
     AnswerSerializer,
 )
-from .models import Collective, QuestionnaireItem, Answer, Statistics
+from .models import UserGroup, Collective, QuestionnaireItem, Answer, Statistics
 
 
 def index(request):
@@ -104,7 +104,17 @@ class CollectiveDetail(APIView):
             )
         serializer = CollectiveSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(creator=request.user)
+            collective = serializer.save(creator=request.user)
+            member_group_name = '{}_members'.format(collective.name)
+            member_group_title = '{} members'.format(collective.name)
+            admin_group_name = '{}_admins'.format(collective.name)
+            admin_group_title = '{} administrators'.format(collective.name)
+            member_group = UserGroup.objects.create(name=member_group_name, title=member_group_title)
+            admin_group = UserGroup.objects.create(name=admin_group_name, title=admin_group_title)
+            admin_group.add_member(request.user)
+            collective.member_group = member_group
+            collective.admin_group = admin_group
+            collective.save()
             statistics = Statistics.objects.create()
             statistics.update()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
