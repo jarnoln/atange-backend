@@ -15,6 +15,38 @@ class UserGroupModelTests(TestCase):
         user_group = UserGroup.objects.create(name="admins", title="Admins")
         self.assertEqual(str(user_group), "admins:Admins")
 
+    def test_adding_members(self):
+        admins = UserGroup.objects.create(name="admins", title="Admins")
+        self.assertEqual(admins.members.count(), 0)
+        user_1 = User.objects.create_user(username="superman", password="Man_of_Steel")
+        self.assertFalse(admins.is_member(user_1))
+        admins.add_member(user_1)
+        self.assertTrue(admins.is_member(user_1))
+        self.assertEqual(admins.members.count(), 1)
+        user_2 = User.objects.create_user(username="batman", password="ImBatman")
+        self.assertFalse(admins.is_member(user_2))
+        admins.add_member(user_2)
+        self.assertTrue(admins.is_member(user_2))
+        self.assertEqual(admins.members.count(), 2)
+
+    def test_kicking_members(self):
+        admins = UserGroup.objects.create(name="admins", title="Admins")
+        user_1 = User.objects.create_user(username="superman", password="Man_of_Steel")
+        user_2 = User.objects.create_user(username="batman", password="ImBatman")
+        admins.add_member(user_1)
+        admins.add_member(user_2)
+        self.assertTrue(admins.is_member(user_1))
+        self.assertTrue(admins.is_member(user_2))
+        self.assertEqual(admins.members.count(), 2)
+        admins.kick_member(user_1)
+        self.assertEqual(admins.members.count(), 1)
+        self.assertFalse(admins.is_member(user_1))
+        self.assertTrue(admins.is_member(user_2))
+        admins.kick_member(user_2)
+        self.assertEqual(admins.members.count(), 0)
+        self.assertFalse(admins.is_member(user_1))
+        self.assertFalse(admins.is_member(user_2))
+
 
 class MembershipModelTests(TestCase):
     def test_can_save_and_load(self):

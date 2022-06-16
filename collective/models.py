@@ -8,13 +8,37 @@ class UserGroup(models.Model):
     name = models.SlugField(max_length=100)
     title = models.CharField(max_length=200)
 
+    @property
+    def members(self):
+        return User.objects.filter(memberships__group=self)
+
+    def is_member(self, user):
+        if user.is_anonymous:
+            return False
+        return Membership.objects.filter(user=user, group=self).exists()
+
+    def add_member(self, user):
+        if user.is_anonymous:
+            return False
+
+        if self.is_member(user):
+            return False
+
+        Membership.objects.create(user=user, group=self)
+        return True
+
+    def kick_member(self, user):
+        if not user.is_anonymous:
+            Membership.objects.filter(user=user, group=self).delete()
+
     def __str__(self):
         return "{}:{}".format(self.name, self.title)
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memberships')
+    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='memberships')
+    joined = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{}:{}".format(self.user.username, self.group.name)
