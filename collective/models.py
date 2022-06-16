@@ -53,6 +53,10 @@ class Collective(models.Model):
     creator = models.ForeignKey(
         User, null=True, blank=True, default=None, on_delete=models.CASCADE
     )
+    admin_group = models.ForeignKey(UserGroup, null=True, blank=True, default=None, on_delete=models.CASCADE,
+                                    related_name='collective_admins')
+    member_group = models.ForeignKey(UserGroup, null=True, blank=True, default=None, on_delete=models.CASCADE,
+                                     related_name='collective_members')
     edited = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def get_permissions(self, user):
