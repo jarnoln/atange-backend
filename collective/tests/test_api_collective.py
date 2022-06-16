@@ -71,7 +71,7 @@ class CollectiveDetailViewTests(AuthTestCase):
         response = self.client.put(url, data_in)
         data_out = json.loads(response.content.decode())
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(data_out["detail"], "Only creator can edit")
+        self.assertEqual(data_out["detail"], "No permission to edit")
 
     def test_create_collective(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)

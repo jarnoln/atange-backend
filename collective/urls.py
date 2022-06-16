@@ -19,6 +19,11 @@ urlpatterns = [
         name="answers",
     ),
     path(
+        "api/collective/<slug:collective_name>/admin/<slug:username>/",
+        views.CollectiveAdmin.as_view(),
+        name="collective_admin",
+    ),
+    path(
         "api/collective/<slug:name>/permissions/",
         views.CollectivePermissions.as_view(),
         name="collective_permissions",
