@@ -27,7 +27,9 @@ class CollectivePermissionsTests(AuthTestCase):
         collective = Collective.objects.create(
             name="jla", title="JLA", description="", creator=self.user
         )
-        response = self.client.get(reverse("collective_permissions", args=[collective.name]))
+        response = self.client.get(
+            reverse("collective_permissions", args=[collective.name])
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], True)
@@ -39,7 +41,9 @@ class CollectivePermissionsTests(AuthTestCase):
         collective = Collective.objects.create(
             name="jla", title="JLA", description="", creator=creator
         )
-        response = self.client.get(reverse("collective_permissions", args=[collective.name]))
+        response = self.client.get(
+            reverse("collective_permissions", args=[collective.name])
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], False)
@@ -51,11 +55,15 @@ class CollectivePermissionsTests(AuthTestCase):
         collective = Collective.objects.create(
             name="jla", title="JLA", description="", creator=creator
         )
-        admin_group = UserGroup.objects.create(name='jla_admins', title='JLA administrators')
+        admin_group = UserGroup.objects.create(
+            name="jla_admins", title="JLA administrators"
+        )
         admin_group.add_member(self.user)
         collective.admin_group = admin_group
         collective.save()
-        response = self.client.get(reverse("collective_permissions", args=[collective.name]))
+        response = self.client.get(
+            reverse("collective_permissions", args=[collective.name])
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], True)
@@ -66,7 +74,9 @@ class CollectivePermissionsTests(AuthTestCase):
         collective = Collective.objects.create(
             name="jla", title="JLA", description="", creator=creator
         )
-        response = self.client.get(reverse("collective_permissions", args=[collective.name]))
+        response = self.client.get(
+            reverse("collective_permissions", args=[collective.name])
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
         self.assertEqual(data_out["can_edit"], False)

@@ -10,24 +10,34 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('collective', '0007_usergroup_membership'),
+        ("collective", "0007_usergroup_membership"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='membership',
-            name='joined',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="membership",
+            name="joined",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='membership',
-            name='group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='collective.usergroup'),
+            model_name="membership",
+            name="group",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="memberships",
+                to="collective.usergroup",
+            ),
         ),
         migrations.AlterField(
-            model_name='membership',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to=settings.AUTH_USER_MODEL),
+            model_name="membership",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="memberships",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

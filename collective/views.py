@@ -70,6 +70,7 @@ class CollectiveList(APIView):
 
 class CollectiveAdmins(APIView):
     """List of collective's administrator usernames"""
+
     def get(self, request, collective_name, format=None):
         collective = get_object_or_404(Collective, name=collective_name)
         admin_group = collective.admin_group
@@ -86,19 +87,21 @@ class CollectiveAdmin(APIView):
 
     def post(self, request, collective_name, username, format=None):
         logger = logging.getLogger(__name__)
-        logger.debug('CollectiveAdmin:post {} {}'.format(collective_name, username))
+        logger.debug("CollectiveAdmin:post {} {}".format(collective_name, username))
         collective = get_object_or_404(Collective, name=collective_name)
         permissions = collective.get_permissions(request.user)
-        if not permissions['can_edit']:
+        if not permissions["can_edit"]:
             return Response(
                 {"detail": "No permission to edit"}, status=status.HTTP_401_UNAUTHORIZED
             )
         user = get_object_or_404(User, username=username)
         admin_group = collective.admin_group
         if not admin_group:
-            admin_group_name = '{}_admins'.format(collective.name)
-            admin_group_title = '{} administrators'.format(collective.name)
-            admin_group = UserGroup.objects.create(name=admin_group_name, title=admin_group_title)
+            admin_group_name = "{}_admins".format(collective.name)
+            admin_group_title = "{} administrators".format(collective.name)
+            admin_group = UserGroup.objects.create(
+                name=admin_group_name, title=admin_group_title
+            )
             collective.admin_group = admin_group
             collective.save()
 
@@ -113,23 +116,23 @@ class CollectiveAdmin(APIView):
     def delete(self, request, collective_name, username, format=None):
         collective = get_object_or_404(Collective, name=collective_name)
         permissions = collective.get_permissions(request.user)
-        if not permissions['can_edit']:
+        if not permissions["can_edit"]:
             return Response(
                 {"detail": "No permission to edit"}, status=status.HTTP_401_UNAUTHORIZED
             )
         user = get_object_or_404(User, username=username)
         admin_group = collective.admin_group
         if not admin_group:
-            admin_group_name = '{}_admins'.format(collective.name)
-            admin_group_title = '{} administrators'.format(collective.name)
-            admin_group = UserGroup.objects.create(name=admin_group_name, title=admin_group_title)
+            admin_group_name = "{}_admins".format(collective.name)
+            admin_group_title = "{} administrators".format(collective.name)
+            admin_group = UserGroup.objects.create(
+                name=admin_group_name, title=admin_group_title
+            )
             collective.admin_group = admin_group
             collective.save()
 
         if not admin_group.is_member(user):
-            return Response(
-                {"detail": "Not admin"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"detail": "Not admin"}, status=status.HTTP_400_BAD_REQUEST)
 
         admin_group.kick_member(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -149,7 +152,7 @@ class CollectiveDetail(APIView):
         logger.debug("CollectiveDetail:put collective_name:{}".format(name))
         logger.debug(" request.user:{}".format(request.user))
         permissions = collective.get_permissions(request.user)
-        if not permissions['can_edit']:
+        if not permissions["can_edit"]:
             return Response(
                 {"detail": "No permission to edit"}, status=status.HTTP_401_UNAUTHORIZED
             )
@@ -173,12 +176,16 @@ class CollectiveDetail(APIView):
         serializer = CollectiveSerializer(data=request.data)
         if serializer.is_valid():
             collective = serializer.save(creator=request.user)
-            member_group_name = '{}_members'.format(collective.name)
-            member_group_title = '{} members'.format(collective.name)
-            admin_group_name = '{}_admins'.format(collective.name)
-            admin_group_title = '{} administrators'.format(collective.name)
-            member_group = UserGroup.objects.create(name=member_group_name, title=member_group_title)
-            admin_group = UserGroup.objects.create(name=admin_group_name, title=admin_group_title)
+            member_group_name = "{}_members".format(collective.name)
+            member_group_title = "{} members".format(collective.name)
+            admin_group_name = "{}_admins".format(collective.name)
+            admin_group_title = "{} administrators".format(collective.name)
+            member_group = UserGroup.objects.create(
+                name=member_group_name, title=member_group_title
+            )
+            admin_group = UserGroup.objects.create(
+                name=admin_group_name, title=admin_group_title
+            )
             admin_group.add_member(request.user)
             collective.member_group = member_group
             collective.admin_group = admin_group

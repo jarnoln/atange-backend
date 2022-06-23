@@ -16,13 +16,21 @@ class CollectiveAdminTests(AuthTestCase):
         self.creator = self.create_user()
         token = self.login(self.creator)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
-        admin_group = UserGroup.objects.create(name='jla_admins', title='JLA administrators')
+        admin_group = UserGroup.objects.create(
+            name="jla_admins", title="JLA administrators"
+        )
         admin_group.add_member(self.creator)
         self.collective = Collective.objects.create(
-            name="jla", title="JLA", description="", creator=self.creator, admin_group=admin_group
+            name="jla",
+            title="JLA",
+            description="",
+            creator=self.creator,
+            admin_group=admin_group,
         )
-        self.user = User.objects.create(username='batman', password='ImBatman')
-        self.url = reverse("collective_admin", args=[self.collective.name, self.user.username])
+        self.user = User.objects.create(username="batman", password="ImBatman")
+        self.url = reverse(
+            "collective_admin", args=[self.collective.name, self.user.username]
+        )
 
     def test_reverse(self):
         self.assertEqual(

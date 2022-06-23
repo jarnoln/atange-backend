@@ -36,8 +36,10 @@ class UserGroup(models.Model):
 
 
 class Membership(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='memberships')
-    group = models.ForeignKey(UserGroup, on_delete=models.CASCADE, related_name='memberships')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="memberships")
+    group = models.ForeignKey(
+        UserGroup, on_delete=models.CASCADE, related_name="memberships"
+    )
     joined = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -53,10 +55,22 @@ class Collective(models.Model):
     creator = models.ForeignKey(
         User, null=True, blank=True, default=None, on_delete=models.CASCADE
     )
-    admin_group = models.ForeignKey(UserGroup, null=True, blank=True, default=None, on_delete=models.CASCADE,
-                                    related_name='collective_admins')
-    member_group = models.ForeignKey(UserGroup, null=True, blank=True, default=None, on_delete=models.CASCADE,
-                                     related_name='collective_members')
+    admin_group = models.ForeignKey(
+        UserGroup,
+        null=True,
+        blank=True,
+        default=None,
+        on_delete=models.CASCADE,
+        related_name="collective_admins",
+    )
+    member_group = models.ForeignKey(
+        UserGroup,
+        null=True,
+        blank=True,
+        default=None,
+        on_delete=models.CASCADE,
+        related_name="collective_members",
+    )
     edited = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def get_permissions(self, user):
@@ -68,10 +82,7 @@ class Collective(models.Model):
         elif self.admin_group:
             can_edit = self.admin_group.is_member(user)
 
-        permissions = {
-            "can_edit": can_edit,
-            "can_join": False
-        }
+        permissions = {"can_edit": can_edit, "can_join": False}
         logger.debug("  permissions:{}".format(permissions))
         return permissions
 

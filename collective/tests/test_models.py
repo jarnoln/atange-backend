@@ -1,7 +1,14 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from collective.models import UserGroup, Membership, Collective, QuestionnaireItem, Answer, Statistics
+from collective.models import (
+    UserGroup,
+    Membership,
+    Collective,
+    QuestionnaireItem,
+    Answer,
+    Statistics,
+)
 
 
 class UserGroupModelTests(TestCase):

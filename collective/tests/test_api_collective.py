@@ -21,7 +21,9 @@ class CollectiveDetailViewTests(AuthTestCase):
 
     def test_get_collective_detail(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-        collective = Collective.objects.create(name="jla", title="JLA", creator=self.user)
+        collective = Collective.objects.create(
+            name="jla", title="JLA", creator=self.user
+        )
         url = reverse("collective", args=[collective.name])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -139,7 +141,9 @@ class CollectiveDetailViewTests(AuthTestCase):
 
     def test_delete_collective(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-        collective = Collective.objects.create(name="jla", title="JLA", creator=self.user)
+        collective = Collective.objects.create(
+            name="jla", title="JLA", creator=self.user
+        )
         self.assertEqual(Collective.objects.count(), 1)
         url = reverse("collective", args=[collective.name])
         response = self.client.delete(url)

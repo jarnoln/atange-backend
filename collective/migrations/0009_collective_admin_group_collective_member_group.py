@@ -7,18 +7,32 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('collective', '0008_membership_joined_alter_membership_group_and_more'),
+        ("collective", "0008_membership_joined_alter_membership_group_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='collective',
-            name='admin_group',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='collective_admins', to='collective.usergroup'),
+            model_name="collective",
+            name="admin_group",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="collective_admins",
+                to="collective.usergroup",
+            ),
         ),
         migrations.AddField(
-            model_name='collective',
-            name='member_group',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='collective_members', to='collective.usergroup'),
+            model_name="collective",
+            name="member_group",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="collective_members",
+                to="collective.usergroup",
+            ),
         ),
     ]
