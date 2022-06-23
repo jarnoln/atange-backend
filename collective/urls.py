@@ -1,23 +1,32 @@
 from django.urls import path
 
-from .views import views
-from .views.collective_admin_view import CollectiveAdmin
+from .views.index import index
+from .views.answer_detail import AnswerDetail
+from .views.collective_admins import CollectiveAdmins
+from .views.collective_admin import CollectiveAdmin
+from .views.collective_answers import CollectiveAnswers
+from .views.collective_detail import CollectiveDetail
+from .views.collective_list import CollectiveList
+from .views.collective_permissions import CollectivePermissions
+from .views.collective_questions import CollectiveQuestions
+from .views.question_detail import QuestionDetail
+from .views.user_info import UserInfo
 
 
 urlpatterns = [
     path(
         "api/collective/<slug:collective_name>/question/<slug:question_name>/answer/<slug:username>/",
-        views.AnswerDetail.as_view(),
+        AnswerDetail.as_view(),
         name="answer",
     ),
     path(
         "api/collective/<slug:collective_name>/question/<slug:question_name>/",
-        views.QuestionDetail.as_view(),
+        QuestionDetail.as_view(),
         name="question",
     ),
     path(
         "api/collective/<slug:name>/answers/",
-        views.CollectiveAnswers.as_view(),
+        CollectiveAnswers.as_view(),
         name="answers",
     ),
     path(
@@ -27,25 +36,25 @@ urlpatterns = [
     ),
     path(
         "api/collective/<slug:collective_name>/admins/",
-        views.CollectiveAdmins.as_view(),
+        CollectiveAdmins.as_view(),
         name="collective_admins",
     ),
     path(
         "api/collective/<slug:name>/permissions/",
-        views.CollectivePermissions.as_view(),
+        CollectivePermissions.as_view(),
         name="collective_permissions",
     ),
     path(
         "api/collective/<slug:name>/questions/",
-        views.CollectiveQuestions.as_view(),
+        CollectiveQuestions.as_view(),
         name="questions",
     ),
     path(
         "api/collective/<slug:name>/",
-        views.CollectiveDetail.as_view(),
+        CollectiveDetail.as_view(),
         name="collective",
     ),
-    path("api/collectives/", views.CollectiveList.as_view(), name="collectives"),
-    path("api/user/<slug:username>/", views.UserInfo.as_view(), name="user_info"),
-    path("", views.index, name="index"),
+    path("api/collectives/", CollectiveList.as_view(), name="collectives"),
+    path("api/user/<slug:username>/", UserInfo.as_view(), name="user_info"),
+    path("", index, name="index"),
 ]
