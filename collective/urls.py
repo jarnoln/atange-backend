@@ -1,6 +1,8 @@
 from django.urls import path
 
-from . import views
+from .views import views
+from .views.collective_admin_view import CollectiveAdmin
+
 
 urlpatterns = [
     path(
@@ -20,7 +22,7 @@ urlpatterns = [
     ),
     path(
         "api/collective/<slug:collective_name>/admin/<slug:username>/",
-        views.CollectiveAdmin.as_view(),
+        CollectiveAdmin.as_view(),
         name="collective_admin",
     ),
     path(
