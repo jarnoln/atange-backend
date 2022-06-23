@@ -24,6 +24,11 @@ urlpatterns = [
         name="collective_admin",
     ),
     path(
+        "api/collective/<slug:collective_name>/admins/",
+        views.CollectiveAdmins.as_view(),
+        name="collective_admins",
+    ),
+    path(
         "api/collective/<slug:name>/permissions/",
         views.CollectivePermissions.as_view(),
         name="collective_permissions",
