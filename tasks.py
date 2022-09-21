@@ -24,6 +24,9 @@ def deploy(context, user, host):
     _check_secret_key(connection, source_folder, python)
     _update_database(connection, source_folder, python)
     _update_static_files(connection, source_folder)
+    _run_remote_unit_tests(connection, source_folder, python)
+    _restart_gunicorn(connection)
+    _restart_nginx(connection)
 
 
 def _create_directory_structure_if_necessary(c, site_folder):
@@ -71,3 +74,16 @@ def _update_database(c, source_folder, python):
 
 def _update_static_files(c, source_folder):
     c.run('cd {} && ../virtualenv/bin/python manage.py collectstatic --noinput'.format(source_folder))
+
+
+def _run_remote_unit_tests(c, source_folder, python):
+    print('*** Run remote unit tests')
+    c.run('cd {} && {} manage.py test --settings=atange.settings'.format(source_folder, python))
+
+
+def _restart_gunicorn(c):
+    c.run('sudo systemctl restart atange.gunicorn')
+
+
+def _restart_nginx(c):
+    c.run('sudo service nginx restart')
