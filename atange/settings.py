@@ -42,6 +42,8 @@ if SECRET_KEY == "":
 ALLOWED_HOSTS = []
 CORS_ALLOWED_ORIGINS = []
 
+SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get("RENDER"):
     DEBUG = False
@@ -56,17 +58,16 @@ if os.environ.get("RENDER"):
     if FRONTEND_URLS:
         CORS_ALLOWED_ORIGINS = FRONTEND_URLS.split(" ")
     # SQLITE_FILE_PATH = os.environ.get("SQLITE_FILE_PATH")
-    SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
+    # SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
     DB_CONNECTION_STRING = os.environ.get("DB_CONNECTION_STRING")
     DATABASES = {
         "default": dj_database_url.config(
             default=DB_CONNECTION_STRING, conn_max_age=600
         )
     }
-
 else:
     DEBUG = True
-    SQLITE_FILE_PATH = BASE_DIR / "db.sqlite3"
+    STATIC_ROOT = os.path.join(SITE_DIR, 'static')
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:3000"  # Your front-end development server address here
     ]
