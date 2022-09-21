@@ -1,0 +1,2 @@
+[digitalocean]
+164.90.164.233 ansible_user=django site_name=atange.com
