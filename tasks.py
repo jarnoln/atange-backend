@@ -10,7 +10,7 @@ REPO_URL = "git@github.com:jarnoln/atange-backend.git"
 @task
 def deploy(context, user, host):
     print('Deploying to {}@{}'.format(user, host))
-    site_name = 'atange.com'
+    site_name = 'backend.atange.com'
     site_folder = '/home/{}/sites/{}'.format(user, site_name)
     source_folder = os.path.join(site_folder, 'source')
     virtualenv = os.path.join(site_folder, 'virtualenv')
