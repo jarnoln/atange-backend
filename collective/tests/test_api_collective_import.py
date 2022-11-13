@@ -70,3 +70,22 @@ class CollectiveImportFormViewTests(AuthTestCase):
         self.assertEqual(collective.description, imported_data['description'])
         self.assertEqual(collective.is_visible, True)
         self.assertEqual(collective.creator.username, imported_data['creator'])
+
+    def test_import_collective_already_exists(self):
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
+        example_file = open('examples/test-collective.json', 'r')
+        file_object = File(example_file, name='collective.json')
+        data = {'json_file': file_object}
+        url = reverse("collective_import_form")
+        Collective.objects.create(name='test-collective', title="Old test collective", creator=self.user)
+        self.assertEqual(Collective.objects.count(), 1)
+        response = self.client.post(url, data, follow=True)
+        example_file.close()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Collective.objects.count(), 1)
+
+        imported_file = open('examples/test-collective.json', 'r')
+        imported_data = json.load(imported_file)
+        collective = Collective.objects.first()
+        self.assertEqual(collective.name, imported_data['name'])
+        self.assertEqual(collective.title, 'Old test collective')

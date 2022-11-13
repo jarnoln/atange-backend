@@ -34,6 +34,10 @@ def parse_imported_data(collective):
         logger.warning('User {} does not exist'.format(creator_name))
         creator = create_user(creator_name)
 
+    if Collective.objects.filter(name=collective['name']).count() > 0:
+        logger.warning('Collective with name {} already exists. Aborting import.'.format(collective['name']))
+        return None
+
     collective = Collective.objects.create(
         name=collective['name'],
         title=collective['title'],
