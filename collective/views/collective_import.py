@@ -64,8 +64,8 @@ def parse_imported_data(data):
             try:
                 answer_user = User.objects.get(username=answer['user'])
             except User.DoesNotExist:
-                logger.warning('Answer user {} does not exist. Creating.'.format(answer_user))
-                answer_user = create_user(creator_name)
+                logger.warning('Answer user {} does not exist. Creating.'.format(answer['user']))
+                answer_user = create_user(answer['user'])
 
             answer_object = Answer.objects.create(
                 question=questionnaire_item,
