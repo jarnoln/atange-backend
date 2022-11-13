@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Collective, QuestionnaireItem, Answer
@@ -12,22 +14,6 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 class CollectiveSerializer(serializers.ModelSerializer):
-    creator = serializers.ReadOnlyField(source="creator.username")
-
-    class Meta:
-        model = Collective
-        fields = [
-            "name",
-            "title",
-            "description",
-            "is_visible",
-            "creator",
-            "created",
-            "edited",
-        ]
-
-
-class CollectiveExportSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source="creator.username")
 
     class Meta:
@@ -96,4 +82,22 @@ class QuestionListSerializer(serializers.ModelSerializer):
             "description",
             "creator",
             "answers",
+        ]
+
+
+class CollectiveExportSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source="creator.username")
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Collective
+        fields = [
+            "name",
+            "title",
+            "description",
+            "is_visible",
+            "creator",
+            "created",
+            "edited",
+            "questions",
         ]

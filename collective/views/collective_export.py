@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from collective.serializers import CollectiveSerializer, CollectiveExportSerializer
+from collective.serializers import CollectiveExportSerializer
 from collective.models import UserGroup, Collective, Statistics
 
 
@@ -19,5 +19,5 @@ class CollectiveExport(APIView):
         logger.debug(" format:{}".format(format))
 
         collective = get_object_or_404(Collective, name=collective_name)
-        serializer = CollectiveSerializer(collective)
+        serializer = CollectiveExportSerializer(collective)
         return Response(serializer.data)
