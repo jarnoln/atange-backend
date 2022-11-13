@@ -1,0 +1,15 @@
+{% extends "collective/base.html" %}
+
+{% block head_title %}Upload collective{% endblock %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+  <table class="table">
+    <tr>
+        <th class="nowrap"> {{ form.json_file.label_tag }} </th>
+        <td> <input type="file" name="json_file" required id="id_json_file" /> </td>
+    </tr>
+    <tr> <td colspan="3"> <button class="save btn btn-primary">Upload</button> </td> </tr>
+  </table>
+</form>
+{% endblock content %}

@@ -7,6 +7,7 @@ from .views.collective_admin import CollectiveAdmin
 from .views.collective_answers import CollectiveAnswers
 from .views.collective_detail import CollectiveDetail
 from .views.collective_export import CollectiveExport
+from .views.collective_import import CollectiveImportFormView
 from .views.collective_list import CollectiveList
 from .views.collective_permissions import CollectivePermissions
 from .views.collective_questions import CollectiveQuestions
@@ -62,5 +63,6 @@ urlpatterns = [
     ),
     path("api/collectives/", CollectiveList.as_view(), name="collectives"),
     path("api/user/<slug:username>/", UserInfo.as_view(), name="user_info"),
+    path("upload/", CollectiveImportFormView.as_view(), name="collective_import_form"),
     path("", index, name="index"),
 ]
