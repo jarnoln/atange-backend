@@ -6,6 +6,7 @@ from .views.collective_admins import CollectiveAdmins
 from .views.collective_admin import CollectiveAdmin
 from .views.collective_answers import CollectiveAnswers
 from .views.collective_detail import CollectiveDetail
+from .views.collective_export import CollectiveExport
 from .views.collective_list import CollectiveList
 from .views.collective_permissions import CollectivePermissions
 from .views.collective_questions import CollectiveQuestions
@@ -43,6 +44,11 @@ urlpatterns = [
         "api/collective/<slug:name>/permissions/",
         CollectivePermissions.as_view(),
         name="collective_permissions",
+    ),
+    path(
+        "api/collective/<slug:collective_name>/export/",
+        CollectiveExport.as_view(),
+        name="collective_export",
     ),
     path(
         "api/collective/<slug:name>/questions/",

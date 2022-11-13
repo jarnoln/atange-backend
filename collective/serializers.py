@@ -27,6 +27,22 @@ class CollectiveSerializer(serializers.ModelSerializer):
         ]
 
 
+class CollectiveExportSerializer(serializers.ModelSerializer):
+    creator = serializers.ReadOnlyField(source="creator.username")
+
+    class Meta:
+        model = Collective
+        fields = [
+            "name",
+            "title",
+            "description",
+            "is_visible",
+            "creator",
+            "created",
+            "edited",
+        ]
+
+
 class CollectiveListSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source="creator.username")
 
