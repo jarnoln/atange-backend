@@ -39,7 +39,7 @@ if SECRET_KEY == "":
         )
         sys.exit(1)
 
-ALLOWED_HOSTS = ['backend.atange.com']
+ALLOWED_HOSTS = ['backend.atange.com', '127.0.0.1']
 CORS_ALLOWED_ORIGINS = []
 
 SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
