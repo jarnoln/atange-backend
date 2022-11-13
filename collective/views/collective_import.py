@@ -1,10 +1,8 @@
 import json
 import logging
 
-from django.shortcuts import get_object_or_404
 from django import forms
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic.edit import FormView
 
@@ -12,9 +10,7 @@ from rest_framework.parsers import JSONParser, FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
-from collective.serializers import CollectiveExportSerializer
-from collective.models import Collective, QuestionnaireItem, Answer
+from collective.models import Collective, QuestionnaireItem, Answer, Statistics
 
 
 class UploadCollectiveForm(forms.Form):
@@ -90,9 +86,11 @@ class CollectiveImportFormView(FormView):
         json_file = self.request.FILES['json_file']
         file_content = json_file.read()
         data = json.loads(file_content.decode('utf-8'))
-        logger = logging.getLogger(__name__)
-        logger.debug('Imported data: {}'.format(data))
+        # logger = logging.getLogger(__name__)
+        # logger.debug('Imported data: {}'.format(data))
         parse_imported_data(data)
+        statistics = Statistics.objects.create()
+        statistics.update()
         return super(CollectiveImportFormView, self).form_valid(form)
 
     def get_success_url(self):
