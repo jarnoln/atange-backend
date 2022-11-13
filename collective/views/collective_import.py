@@ -3,6 +3,7 @@ import logging
 
 from django.shortcuts import get_object_or_404
 from django import forms
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic.edit import FormView
@@ -20,6 +21,29 @@ class UploadCollectiveForm(forms.Form):
     json_file = forms.FileField(label="Select Collective JSON file to upload")
 
 
+def create_user(username):
+    user = User.objects.create_user(username=username)
+    return user
+
+def parse_imported_data(collective):
+    creator_name = collective['creator']
+    logger = logging.getLogger(__name__)
+    try:
+        creator = User.objects.get(username=creator_name)
+    except User.DoesNotExist:
+        logger.warning('User {} does not exist'.format(creator_name))
+        creator = create_user(creator_name)
+
+    collective = Collective.objects.create(
+        name=collective['name'],
+        title=collective['title'],
+        description=collective['description'],
+        is_visible=collective['is_visible'],
+        creator=creator
+    )
+    return collective
+
+
 class CollectiveImportFormView(FormView):
     """Endpoint for importing new collective from uploaded JSON file"""
     "Using basic Django views"
@@ -32,6 +56,7 @@ class CollectiveImportFormView(FormView):
         data = json.loads(file_content.decode('utf-8'))
         logger = logging.getLogger(__name__)
         logger.debug('Imported data: {}'.format(data))
+        parse_imported_data(data)
         return super(CollectiveImportFormView, self).form_valid(form)
 
     def get_success_url(self):
