@@ -93,6 +93,16 @@ class CollectiveImportFormViewTests(AuthTestCase):
         self.assertEqual(q2.order, 2)
         self.assertEqual(q2.item_type, 'Q')
 
+        self.assertEqual(Answer.objects.count(), 2)
+        a1 = Answer.objects.get(question=q1)
+        self.assertEqual(a1.user.username, 'superman')
+        self.assertEqual(a1.vote, -1)
+        self.assertEqual(a1.comment, '')
+        a2 = Answer.objects.get(question=q2)
+        self.assertEqual(a2.user.username, 'superman')
+        self.assertEqual(a2.vote, 0)
+        self.assertEqual(a2.comment, '')
+
     def test_import_collective_already_exists(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
         example_file = open('examples/test-collective.json', 'r')

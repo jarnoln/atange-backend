@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 
 from collective.serializers import CollectiveExportSerializer
-from collective.models import Collective, QuestionnaireItem
+from collective.models import Collective, QuestionnaireItem, Answer
 
 
 class UploadCollectiveForm(forms.Form):
@@ -51,7 +51,7 @@ def parse_imported_data(data):
         try:
             question_creator = User.objects.get(username=question['creator'])
         except User.DoesNotExist:
-            logger.warning('User {} does not exist. Creating.'.format(creator_name))
+            logger.warning('Question creator {} does not exist. Creating.'.format(creator_name))
             question_creator = create_user(creator_name)
 
         questionnaire_item = QuestionnaireItem.objects.create(
@@ -63,6 +63,20 @@ def parse_imported_data(data):
             order=question['order'],
             creator=question_creator
         )
+
+        for answer in question['answers']:
+            try:
+                answer_user = User.objects.get(username=answer['user'])
+            except User.DoesNotExist:
+                logger.warning('Answer user {} does not exist. Creating.'.format(answer_user))
+                answer_user = create_user(creator_name)
+
+            answer_object = Answer.objects.create(
+                question=questionnaire_item,
+                user=answer_user,
+                vote=answer['vote'],
+                comment=answer['comment']
+            )
     return collective
 
 

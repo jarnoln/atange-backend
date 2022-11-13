@@ -1,0 +1,55 @@
+{
+  "name":"test-collective",
+  "title":"Test collective",
+  "description":"This is a simple test collective",
+  "is_visible":true,
+  "creator":"superman",
+  "created":"2022-10-23T13:07:52.200007Z",
+  "edited":"2022-10-23T13:07:52.247848Z",
+  "questions":[
+    {
+      "name":"header-1",
+      "title":"Header 1",
+      "description":"",
+      "item_type":"H",
+      "order":0,
+      "creator":"superman",
+      "created":"2022-10-23T13:58:57.732437Z",
+      "answers":[]
+    },
+    {
+      "name":"question-1",
+      "title":"Question 1",
+      "description":"",
+      "item_type":"Q",
+      "order":1,
+      "creator":"superman",
+      "created":"2022-10-23T16:10:11.225721Z",
+      "answers":[
+        {
+          "question":"question-1",
+          "user":"superman",
+          "vote":-1,
+          "comment":""
+        }
+      ]
+    },
+    {
+      "name":"another-question",
+      "title":"Another question",
+      "description":"",
+      "item_type":"Q",
+      "order":2,
+      "creator":"superman",
+      "created":"2022-10-23T17:12:16.254595Z",
+      "answers":[
+        {
+          "question":"another-question",
+          "user":"superman",
+          "vote":0,
+          "comment":""
+        }
+      ]
+    }
+  ]
+}
