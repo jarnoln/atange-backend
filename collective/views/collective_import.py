@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 
 
 from collective.serializers import CollectiveExportSerializer
-from collective.models import UserGroup, Collective, Statistics
+from collective.models import Collective, QuestionnaireItem
 
 
 class UploadCollectiveForm(forms.Form):
@@ -25,8 +25,9 @@ def create_user(username):
     user = User.objects.create_user(username=username)
     return user
 
-def parse_imported_data(collective):
-    creator_name = collective['creator']
+
+def parse_imported_data(data):
+    creator_name = data['creator']
     logger = logging.getLogger(__name__)
     try:
         creator = User.objects.get(username=creator_name)
@@ -34,17 +35,34 @@ def parse_imported_data(collective):
         logger.warning('User {} does not exist'.format(creator_name))
         creator = create_user(creator_name)
 
-    if Collective.objects.filter(name=collective['name']).count() > 0:
-        logger.warning('Collective with name {} already exists. Aborting import.'.format(collective['name']))
+    if Collective.objects.filter(name=data['name']).count() > 0:
+        logger.warning('Collective with name {} already exists. Aborting import.'.format(data['name']))
         return None
 
     collective = Collective.objects.create(
-        name=collective['name'],
-        title=collective['title'],
-        description=collective['description'],
-        is_visible=collective['is_visible'],
+        name=data['name'],
+        title=data['title'],
+        description=data['description'],
+        is_visible=data['is_visible'],
         creator=creator
     )
+
+    for question in data['questions']:
+        try:
+            question_creator = User.objects.get(username=question['creator'])
+        except User.DoesNotExist:
+            logger.warning('User {} does not exist. Creating.'.format(creator_name))
+            question_creator = create_user(creator_name)
+
+        questionnaire_item = QuestionnaireItem.objects.create(
+            collective=collective,
+            name=question['name'],
+            title=question['title'],
+            description=question['description'],
+            item_type=question['item_type'],
+            order=question['order'],
+            creator=question_creator
+        )
     return collective
 
 
@@ -70,7 +88,7 @@ class CollectiveImportFormView(FormView):
 class CollectiveImport(APIView):
     """Endpoint for importing new collective from uploaded JSON file"""
     "Using Django REST API views"
-
+    "Not yet used"
     parser_classes = [FileUploadParser]
 
     def post(self, request, format=None):

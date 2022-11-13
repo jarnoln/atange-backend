@@ -1,8 +1,10 @@
 import json
 from io import StringIO
 
+from django.contrib.auth.models import User
 from django.core.files.base import File
 from django.urls import reverse
+
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -57,6 +59,10 @@ class CollectiveImportFormViewTests(AuthTestCase):
         url = reverse("collective_import_form")
 
         self.assertEqual(Collective.objects.count(), 0)
+        self.assertEqual(QuestionnaireItem.objects.count(), 0)
+        self.assertEqual(Answer.objects.count(), 0)
+        self.assertEqual(User.objects.count(), 1)
+
         response = self.client.post(url, data, follow=True)
         example_file.close()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,6 +76,22 @@ class CollectiveImportFormViewTests(AuthTestCase):
         self.assertEqual(collective.description, imported_data['description'])
         self.assertEqual(collective.is_visible, True)
         self.assertEqual(collective.creator.username, imported_data['creator'])
+
+        self.assertEqual(QuestionnaireItem.objects.count(), 3)
+        questionnaire_items = QuestionnaireItem.objects.all()
+        h1 = questionnaire_items[0]
+        q1 = questionnaire_items[1]
+        q2 = questionnaire_items[2]
+        self.assertEqual(h1.order, 0)
+        self.assertEqual(h1.item_type, 'H')
+        self.assertEqual(h1.name, imported_data['questions'][0]['name'])
+        self.assertEqual(h1.title, imported_data['questions'][0]['title'])
+        self.assertEqual(h1.description, imported_data['questions'][0]['description'])
+        self.assertEqual(h1.creator.username, imported_data['questions'][0]['creator'])
+        self.assertEqual(q1.order, 1)
+        self.assertEqual(q1.item_type, 'Q')
+        self.assertEqual(q2.order, 2)
+        self.assertEqual(q2.item_type, 'Q')
 
     def test_import_collective_already_exists(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
