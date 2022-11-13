@@ -1,16 +1,15 @@
 import logging
 
 from django.shortcuts import get_object_or_404
-from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from collective.serializers import CollectiveExportSerializer
-from collective.models import UserGroup, Collective, Statistics
+from collective.models import Collective
 
 
 class CollectiveExport(APIView):
-    """Endpoint for collective operations"""
+    """Endpoint for exporting collective contents as JSON file"""
 
     def get(self, request, collective_name, format=None):
         logger = logging.getLogger(__name__)
@@ -20,4 +19,7 @@ class CollectiveExport(APIView):
 
         collective = get_object_or_404(Collective, name=collective_name)
         serializer = CollectiveExportSerializer(collective)
-        return Response(serializer.data)
+        response = Response(serializer.data, content_type="application/json")
+        logger.debug("  serializer.data: {}".format(serializer.data))
+        response.headers['Content-Disposition'] = 'attachment; filename={}.json'.format(collective_name)
+        return response
