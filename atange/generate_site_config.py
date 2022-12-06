@@ -14,6 +14,8 @@ def generate_site_config(site_config_file_path):
         site_config_file.write("ALLOWED_HOSTS = ['127.0.0.1']\n")
         site_config_file.write("CORS_ALLOWED_ORIGINS = ['http://localhost:3000']\n")
         site_config_file.write("DEBUG = False  # Can be True on development server but must be False when deploying\n")
+        site_config_file.write("CSRF_COOKIE_SECURE = False\n")
+        site_config_file.write("SESSION_COOKIE_SECURE = False\n")
         chars = "abcdefghijklmnopqrstuvxyz01234567890_-!*"
         secret_key = "".join(random.SystemRandom().choice(chars) for _ in range(50))
         site_config_file.write("SECRET_KEY = '%s'\n" % secret_key)

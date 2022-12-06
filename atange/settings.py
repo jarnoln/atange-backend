@@ -32,10 +32,12 @@ if ALLOWED_HOSTS:
 
 if SECRET_KEY == "":
     try:
-        from .site_config import DEBUG
-        from .site_config import SECRET_KEY
         from .site_config import ALLOWED_HOSTS
         from .site_config import CORS_ALLOWED_ORIGINS
+        from .site_config import DEBUG
+        from .site_config import SECRET_KEY
+        from .site_config import CSRF_COOKIE_SECURE
+        from .site_config import SESSION_COOKIE_SECURE
     except ImportError:
         print("Site configuration file does not exist. How to create it:")
         print(
