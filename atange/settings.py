@@ -26,23 +26,24 @@ PROJECT_NAME = Path(__file__).parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
+if ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ALLOWED_HOSTS.split(" ")
 
 if SECRET_KEY == "":
     try:
-        from .passwords import SECRET_KEY
+        from .site_config import DEBUG
+        from .site_config import SECRET_KEY
+        from .site_config import ALLOWED_HOSTS
+        from .site_config import CORS_ALLOWED_ORIGINS
     except ImportError:
-        print("Password file does not exist. How to create it:")
+        print("Site configuration file does not exist. How to create it:")
         print(
-            "python {}/generate_passwords.py {}/passwords.py".format(
+            "python {}/generate_site_config.py {}/site_config.py".format(
                 PROJECT_NAME, PROJECT_NAME
             )
         )
         sys.exit(1)
-
-ALLOWED_HOSTS = ['backend.atange.com', '127.0.0.1']
-CORS_ALLOWED_ORIGINS = []
-
-SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get("RENDER"):
@@ -64,13 +65,8 @@ if os.environ.get("RENDER"):
         )
     }
 else:
-    DEBUG = True
     STATIC_ROOT = os.path.join(SITE_DIR, 'static')
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:3000",  # Your front-end development server address here
-        "https://atange.com",
-        "https://www.atange.com"
-    ]
+    SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
     DATABASES = {
         "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
     }

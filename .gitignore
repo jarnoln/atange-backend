@@ -3,4 +3,5 @@
 coverage.xml
 __pycache__
 passwords.py
+site_config.py
 db.sqlite3

@@ -60,9 +60,9 @@ def _install_virtualenv_libraries(c, source_folder, pip):
 
 def _check_secret_key(c, source_folder, python):
     settings_folder = os.path.join(source_folder, 'atange')
-    passwords_file = os.path.join(settings_folder, 'passwords.py')
-    if c.run('test -f {}'.format(passwords_file), warn=True).failed:
-        c.run('{} {}/generate_passwords.py {}'.format(python, settings_folder, passwords_file))
+    site_config_file = os.path.join(settings_folder, 'site_config.py')
+    if c.run('test -f {}'.format(site_config_file), warn=True).failed:
+        c.run('{} {}/generate_site_config.py {}'.format(python, settings_folder, site_config_file))
 
 
 def _update_database(c, source_folder, python):
