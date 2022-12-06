@@ -29,7 +29,7 @@ jobs:
         pip install codecov
     - name: Run Tests
       run: |
-        python atange/generate_passwords.py atange/passwords.py
+        python atange/generate_site_config.py atange/site_config.py
         python manage.py test
     - name: Run coverage
       run: |
