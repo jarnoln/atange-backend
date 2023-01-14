@@ -34,6 +34,7 @@ def _create_directory_structure_if_necessary(c, site_folder):
     c.run('mkdir -p %s' % site_folder)
     for sub_folder in ('database', 'log', 'static', 'db'):
         c.run('mkdir -p %s/%s' % (site_folder, sub_folder))
+    c.run('sudo mkdir -p /var/log/gunicorn')
 
 
 def _init_virtualenv(c, site_folder):
