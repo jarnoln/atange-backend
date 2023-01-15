@@ -27,13 +27,14 @@ class CollectiveListViewTests(AuthTestCase):
         self.assertEqual(data_out[0]["name"], "jla")
         self.assertEqual(data_out[0]["title"], "JLA")
         self.assertEqual(data_out[0]["description"], "")
-        self.assertTrue("is_visible" not in data_out[0])
+        self.assertEqual(data_out[0]["is_visible"], True)
         self.assertTrue("edited" not in data_out[0])
         self.assertEqual(data_out[0]["creator"], user.username)
         self.assertEqual(data_out[1]["name"], "jsa")
         self.assertEqual(data_out[1]["title"], "JSA")
         self.assertEqual(data_out[1]["creator"], user.username)
         self.assertEqual(data_out[1]["description"], "")
+        self.assertEqual(data_out[1]["is_visible"], True)
 
     def test_get_empty_list_if_no_collectives(self):
         client = APIClient()
@@ -45,24 +46,25 @@ class CollectiveListViewTests(AuthTestCase):
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 0)
 
-    def test_list_only_visible_collectives(self):
+    def test_list_also_hidden_collectives(self):
+        """ Frontend is responsible for showing only visible collectives"""
         client = APIClient()
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION="Token " + token)
         Collective.objects.create(
-            name="tfx", title="Tass Force X", creator=user, is_visible=False
+            name="tfx", title="Task Force X", creator=user, is_visible=False
         )
         response = client.get(reverse("collectives"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(len(data_out), 0)
+        self.assertEqual(len(data_out), 1)
+        self.assertEqual(data_out[0]["name"], "tfx")
+        self.assertEqual(data_out[0]["is_visible"], False)
         Collective.objects.create(name="jla", title="JLA", creator=user)
         Collective.objects.create(name="jsa", title="JSA", creator=user)
         self.assertEqual(Collective.objects.count(), 3)
         response = client.get(reverse("collectives"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
-        self.assertEqual(len(data_out), 2)
-        self.assertEqual(data_out[0]["name"], "jla")
-        self.assertEqual(data_out[1]["name"], "jsa")
+        self.assertEqual(len(data_out), 3)

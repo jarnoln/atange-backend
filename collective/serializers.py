@@ -34,7 +34,7 @@ class CollectiveListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Collective
-        fields = ["name", "title", "description", "creator", "created"]
+        fields = ["name", "title", "description", "is_visible", "creator", "created"]
 
 
 class AnswerSerializer(serializers.ModelSerializer):

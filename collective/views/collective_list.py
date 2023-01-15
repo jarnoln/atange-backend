@@ -30,6 +30,6 @@ class CollectiveList(APIView):
     """
 
     def get(self, request, format=None):
-        collective_list = Collective.objects.filter(is_visible=True)
+        collective_list = Collective.objects.all()
         serializer = CollectiveListSerializer(collective_list, many=True)
         return Response(serializer.data)
