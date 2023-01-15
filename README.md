@@ -24,9 +24,9 @@ Create virtual environment and install Python packages:
     mkvirtualenv -p /usr/bin/python3 atange
     pip install -r requirements.txt
 
-Generate password:
+Generate site configuration:
 
-    python atange/generate_passwords.py cvdb/passwords.py
+    python atange/generate_site_config.py atange/site_config.py
 
 Initialize DB:
 
@@ -55,3 +55,6 @@ Add your host to ansible/inventory. Then:
 
     ansible-playbook -i ansible/inventory ansible/provision-deb.yaml
     invoke deploy --user=[your_username] --host=[your_host]
+
+This will create `atange/site_config.py`-file with default values, but they need to be replaced with
+actual host-specific values (especially `ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS`)
