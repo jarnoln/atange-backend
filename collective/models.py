@@ -92,7 +92,9 @@ class Collective(models.Model):
 
 class QuestionnaireItem(models.Model):
     ITEM_TYPES = [("Q", "Question"), ("H", "Header")]
-    collective = models.ForeignKey(Collective, on_delete=models.CASCADE, related_name='questions')
+    collective = models.ForeignKey(
+        Collective, on_delete=models.CASCADE, related_name="questions"
+    )
     name = models.SlugField(max_length=100)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True, default="")

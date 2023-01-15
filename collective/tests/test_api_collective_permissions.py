@@ -83,8 +83,6 @@ class CollectivePermissionsTests(AuthTestCase):
         self.assertEqual(data_out["can_join"], False)
 
     def test_get_collective_permissions_when_no_collective(self):
-        response = self.client.get(
-            reverse("collective_permissions", args=['unknown'])
-        )
+        response = self.client.get(reverse("collective_permissions", args=["unknown"]))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         data_out = json.loads(response.content.decode())

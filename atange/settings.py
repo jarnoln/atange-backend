@@ -68,7 +68,7 @@ if os.environ.get("RENDER"):
         )
     }
 else:
-    STATIC_ROOT = os.path.join(SITE_DIR, 'static')
+    STATIC_ROOT = os.path.join(SITE_DIR, "static")
     SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
     DATABASES = {
         "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}

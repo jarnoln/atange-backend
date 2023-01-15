@@ -21,5 +21,7 @@ class CollectiveExport(APIView):
         serializer = CollectiveExportSerializer(collective)
         response = Response(serializer.data, content_type="application/json")
         logger.debug("  serializer.data: {}".format(serializer.data))
-        response.headers['Content-Disposition'] = 'attachment; filename={}.json'.format(collective_name)
+        response.headers["Content-Disposition"] = "attachment; filename={}.json".format(
+            collective_name
+        )
         return response

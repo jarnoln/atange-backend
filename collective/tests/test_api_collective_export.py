@@ -17,15 +17,15 @@ class CollectiveExportViewTests(AuthTestCase):
         self.token = self.login(self.user)
 
     def test_reverse(self):
-        self.assertEqual(reverse("collective_export", args=["jla"]), "/api/collective/jla/export/")
+        self.assertEqual(
+            reverse("collective_export", args=["jla"]), "/api/collective/jla/export/"
+        )
 
     def test_get_collective_export(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
         creator = User.objects.create(username="batman", password="ImBatman")
         member = User.objects.create(username="aquaman", password="atlantis")
-        collective = Collective.objects.create(
-            name="jla", title="JLA", creator=creator
-        )
+        collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
         q_1 = QuestionnaireItem.objects.create(
             collective=collective,
             name="q1",

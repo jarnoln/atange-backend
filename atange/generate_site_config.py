@@ -10,10 +10,12 @@ When deploying to server replace development settings with actual settings on th
 
 
 def generate_site_config(site_config_file_path):
-    with open(site_config_file_path, "w", encoding='utf-8') as site_config_file:
+    with open(site_config_file_path, "w", encoding="utf-8") as site_config_file:
         site_config_file.write("ALLOWED_HOSTS = ['127.0.0.1']\n")
         site_config_file.write("CORS_ALLOWED_ORIGINS = ['http://localhost:3000']\n")
-        site_config_file.write("DEBUG = False  # Can be True on development server but must be False when deploying\n")
+        site_config_file.write(
+            "DEBUG = False  # Can be True on development server but must be False when deploying\n"
+        )
         site_config_file.write("SECURE_SSL_REDIRECT = False\n")
         site_config_file.write("CSRF_COOKIE_SECURE = False\n")
         site_config_file.write("SESSION_COOKIE_SECURE = False\n")
@@ -26,6 +28,8 @@ def generate_site_config(site_config_file_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("site_config_file_path", help="Where site_config file will be placed")
+    parser.add_argument(
+        "site_config_file_path", help="Where site_config file will be placed"
+    )
     args = parser.parse_args()
     generate_site_config(args.site_config_file_path)
