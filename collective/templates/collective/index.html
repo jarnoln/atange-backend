@@ -9,18 +9,48 @@
 <p>
   <a href="/api/">API</a>
 </p>
-{% if users %}
-<p>Users:
-  {% for user in users %}
-      [{{ user.username }}]
+{% if collectives %}
+<h2>Collectives</h2>
+<table>
+  <tr><th>created</th><th>name</th><th>questions</th><th>is_visible</th><th>creator</th></tr>
+  {% for collective in collectives %}
+      <tr>
+          <td>{{ collective.created|date:"Y-m-d H:i e" }}</td>
+          <td>{{ collective.name }}</td>
+          <td>{{ collective.questions.count }}</td>
+          <td>{{ collective.is_visible }}</td>
+          <td>{{ collective.creator.username }}</td>
+          <td><a href="/api/collective/{{ collective.name }}/export/?format=json">[Download]</a></td>
+      </tr>
   {% endfor %}
-</p>
+</table>
 {% endif %}
+
+{% if users %}
+<h2>Users</h2>
+<table>
+  <tr><th>username</th><th>joined</th><th>answers</th><th>is_active</th><th>is_staff</th></tr>
+  {% for user in users %}
+  <tr>
+      <td>{{ user.username }}</td>
+      <td>{{ user.date_joined|date:"Y-m-d H:i e" }}</td>
+      <td>{{ user.answers.count }}</td>
+      <td>{{ user.is_active }}</td>
+      <td>{{ user.is_staff }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<p>
+  <a href="/upload/">[Upload]</a>
+</p>
 <h2>Settings</h2>
 <ul>
-  <li> SQLITE_FILE_PATH: {{ settings.SQLITE_FILE_PATH }}</li>
-  <li> CORS_ALLOWED_ORIGINS: {{ settings.CORS_ALLOWED_ORIGINS }}</li>
   <li> ALLOWED_HOSTS: {{ settings.ALLOWED_HOSTS }}</li>
+  <li> CORS_ALLOWED_ORIGINS: {{ settings.CORS_ALLOWED_ORIGINS }}</li>
+  <li> DEBUG: {{ settings.DEBUG }}</li>
+  <li> SQLITE_FILE_PATH: {{ settings.SQLITE_FILE_PATH }}</li>
 </ul>
 
 {% if statistics %}

@@ -122,7 +122,7 @@ class Answer(models.Model):
     question = models.ForeignKey(
         QuestionnaireItem, on_delete=models.CASCADE, related_name="answers"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answers")
     vote = models.IntegerField(default=0, choices=ANSWER_CHOICES)
     comment = models.TextField(null=True, blank=True, default="")
     created = models.DateTimeField(auto_now_add=True)
