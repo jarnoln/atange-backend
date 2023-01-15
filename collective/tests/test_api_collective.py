@@ -22,7 +22,7 @@ class CollectiveDetailViewTests(AuthTestCase):
     def test_get_collective_detail(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
         collective = Collective.objects.create(
-            name="jla", title="JLA", creator=self.user
+            name="jla", title="JLA", creator=self.user, is_visible=True
         )
         url = reverse("collective", args=[collective.name])
         response = self.client.get(url)
@@ -32,6 +32,7 @@ class CollectiveDetailViewTests(AuthTestCase):
         self.assertEqual(data_out["title"], "JLA")
         self.assertEqual(data_out["description"], None)
         self.assertEqual(data_out["creator"], self.user.username)
+        self.assertEqual(data_out["is_visible"], True)
 
     def test_no_such_collective(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
@@ -41,11 +42,12 @@ class CollectiveDetailViewTests(AuthTestCase):
 
     def test_update_collective_info(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-        Collective.objects.create(name="jla", title="JLA", creator=self.user)
+        Collective.objects.create(name="jla", title="JLA", creator=self.user, is_visible=True)
         data_in = {
             "name": "section8",
             "title": "Section 8",
             "description": "Replaces old JLA",
+            "is_visible": False
         }
         url = reverse("collective", args=["jla"])
         response = self.client.put(url, data_in)
@@ -59,15 +61,17 @@ class CollectiveDetailViewTests(AuthTestCase):
         self.assertEqual(data_out["name"], data_in["name"])
         self.assertEqual(data_out["title"], data_in["title"])
         self.assertEqual(data_out["description"], data_in["description"])
+        self.assertEqual(data_out["is_visible"], data_in["is_visible"])
 
     def test_update_collective_when_not_creator(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
         creator = User.objects.create(username="batman", password="ImBatman")
-        collective = Collective.objects.create(name="jla", title="JLA", creator=creator)
+        collective = Collective.objects.create(name="jla", title="JLA", creator=creator, is_visible=True)
         data_in = {
             "name": "section8",
             "title": "Section 8",
             "description": "Replaces old JLA",
+            "is_visible": "false"
         }
         url = reverse("collective", args=[collective.name])
         response = self.client.put(url, data_in)
