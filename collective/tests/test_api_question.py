@@ -122,10 +122,46 @@ class QuestionDetailViewTests(AuthTestCase):
             "name": "q1",
             "title": "Question 1",
             "description": "Hard question",
-            "item_type": "H",
+            "item_type": "Q",
             "order": 13,
         }
         url = reverse("question", args=[collective.name, "q1"])
+
+        response = client.post(url, data_in)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(QuestionnaireItem.objects.count(), 1)
+        question = QuestionnaireItem.objects.first()
+        self.assertEqual(question.name, data_in["name"])
+        self.assertEqual(question.title, data_in["title"])
+        self.assertEqual(question.description, data_in["description"])
+        self.assertEqual(question.item_type, data_in["item_type"])
+        self.assertEqual(question.order, data_in["order"])
+        self.assertEqual(question.creator, user)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(data_out["name"], data_in["name"])
+        self.assertEqual(data_out["title"], data_in["title"])
+        self.assertEqual(data_out["description"], data_in["description"])
+        self.assertEqual(data_out["item_type"], data_in["item_type"])
+        self.assertEqual(data_out["order"], data_in["order"])
+        self.assertEqual(data_out["creator"], user.username)
+
+    def test_create_question_with_long_name_and_title(self):
+        client = APIClient()
+        user = self.create_user()
+        token = self.login(user)
+        client.credentials(HTTP_AUTHORIZATION="Token " + token)
+        collective = Collective.objects.create(name="jla", title="JLA", creator=user)
+        self.assertEqual(QuestionnaireItem.objects.count(), 0)
+        data_in = {
+            "name": "jla-meetings-should-be-livestreamed-and-meeting-minutes-made-available-for-general-public-to-improve-transparency",
+            "title": "JLA meetings should be livestreamed and meeting minutes made available for general public to improve transparency",
+            "description": "Transparency",
+            "item_type": "Q",
+            "order": 14,
+        }
+        question_name = "edustuksellisen-demokratian-elinten-kokoukset-ja-asiantuntijakuulemiset-on-lahtokohtaisesti-livestriimattava"
+        url = reverse("question", args=[collective.name, question_name])
 
         response = client.post(url, data_in)
 

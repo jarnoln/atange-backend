@@ -42,12 +42,14 @@ class CollectiveDetailViewTests(AuthTestCase):
 
     def test_update_collective_info(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
-        Collective.objects.create(name="jla", title="JLA", creator=self.user, is_visible=True)
+        Collective.objects.create(
+            name="jla", title="JLA", creator=self.user, is_visible=True
+        )
         data_in = {
             "name": "section8",
             "title": "Section 8",
             "description": "Replaces old JLA",
-            "is_visible": False
+            "is_visible": False,
         }
         url = reverse("collective", args=["jla"])
         response = self.client.put(url, data_in)
@@ -66,12 +68,14 @@ class CollectiveDetailViewTests(AuthTestCase):
     def test_update_collective_when_not_creator(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token)
         creator = User.objects.create(username="batman", password="ImBatman")
-        collective = Collective.objects.create(name="jla", title="JLA", creator=creator, is_visible=True)
+        collective = Collective.objects.create(
+            name="jla", title="JLA", creator=creator, is_visible=True
+        )
         data_in = {
             "name": "section8",
             "title": "Section 8",
             "description": "Replaces old JLA",
-            "is_visible": "false"
+            "is_visible": "false",
         }
         url = reverse("collective", args=[collective.name])
         response = self.client.put(url, data_in)

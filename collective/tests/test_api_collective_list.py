@@ -47,7 +47,7 @@ class CollectiveListViewTests(AuthTestCase):
         self.assertEqual(len(data_out), 0)
 
     def test_list_also_hidden_collectives(self):
-        """ Frontend is responsible for showing only visible collectives"""
+        """Frontend is responsible for showing only visible collectives"""
         client = APIClient()
         user = self.create_user()
         token = self.login(user)
