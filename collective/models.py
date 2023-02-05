@@ -5,8 +5,8 @@ from django.contrib.auth.models import User, Group
 
 
 class UserGroup(models.Model):
-    name = models.SlugField(max_length=100)
-    title = models.CharField(max_length=200)
+    name = models.SlugField(max_length=250)
+    title = models.CharField(max_length=250)
 
     @property
     def members(self):
@@ -47,8 +47,8 @@ class Membership(models.Model):
 
 
 class Collective(models.Model):
-    name = models.SlugField(max_length=100)
-    title = models.CharField(max_length=200)
+    name = models.SlugField(max_length=250)
+    title = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
     is_visible = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -95,8 +95,8 @@ class QuestionnaireItem(models.Model):
     collective = models.ForeignKey(
         Collective, on_delete=models.CASCADE, related_name="questions"
     )
-    name = models.SlugField(max_length=100)
-    title = models.CharField(max_length=200)
+    name = models.SlugField(max_length=250)
+    title = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True, default="")
     order = models.IntegerField(
         default=0,
