@@ -51,10 +51,6 @@ if SECRET_KEY == "":
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get("RENDER"):
     DEBUG = False
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    # Turn on WhiteNoise storage backend that takes care of compressing static files
-    # and creating unique names for each version, so they can safely be cached forever.
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
     if RENDER_EXTERNAL_HOSTNAME:
         ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -68,11 +64,16 @@ if os.environ.get("RENDER"):
         )
     }
 else:
-    STATIC_ROOT = os.path.join(SITE_DIR, "static")
     SQLITE_FILE_PATH = os.path.join(BASE_DIR, "db.sqlite3")
     DATABASES = {
         "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
     }
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# Turn on WhiteNoise storage backend that takes care of compressing static files
+# and creating unique names for each version, so they can safely be cached forever.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Application definition
 
