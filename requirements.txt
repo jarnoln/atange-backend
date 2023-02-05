@@ -2,7 +2,7 @@ dj-database-url==1.2.0
 Django>=4.1,<4.2
 django-cors-headers==3.13.0
 django-filter==22.1  # Recommended by Django REST framework
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 djoser==2.1.0  # REST implementation of Django authentication system
 Markdown==3.4.1  # Recommended by Django REST framework
 psycopg2-binary==2.9.5
