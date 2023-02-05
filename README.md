@@ -51,7 +51,7 @@ Deploy
 
     pip install -r requirements-deploy.txt
 
-Add your host to ansible/inventory. Then:
+Edit `ansible/inventory.example`  with your actual host information and rename it to `ansible/inventory`. Then:
 
     ansible-playbook -i ansible/inventory ansible/provision-deb.yaml
     invoke deploy --user=[your_username] --host=[your_host]

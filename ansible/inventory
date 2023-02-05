@@ -1,2 +1,0 @@
-[lightsail]
-3.67.73.42 ansible_user=django site_name=backend.atange.com
