@@ -1,2 +1,2 @@
-[digitalocean]
-164.90.164.233 ansible_user=django site_name=backend.atange.com
+[lightsail]
+3.67.73.42 ansible_user=django site_name=backend.atange.com
