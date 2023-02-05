@@ -6,4 +6,5 @@ passwords.py
 site_config.py
 db.sqlite3
 ansible/inventory
+staticfiles
 
