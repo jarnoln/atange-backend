@@ -41,7 +41,7 @@ if SECRET_KEY == "":
         from .site_config import SECURE_SSL_REDIRECT
         from .site_config import SESSION_COOKIE_SECURE
     except ImportError:
-        print("Site configuration file does not exist. How to create it:")
+        print("Site configuration file does not exist or not properly configured. How to create it:")
         print(
             "python {}/generate_site_config.py {}/site_config.py".format(
                 PROJECT_NAME, PROJECT_NAME
