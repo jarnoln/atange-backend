@@ -4,6 +4,7 @@ django-cors-headers==3.13.0
 django-filter==22.1  # Recommended by Django REST framework
 djangorestframework==3.14.0
 djoser==2.1.0  # REST implementation of Django authentication system
+logtail-python==0.1.3
 Markdown==3.4.1  # Recommended by Django REST framework
 psycopg2-binary==2.9.5
 PyYAML==6.0  # Required by DRF to generate OpenAPI schema
