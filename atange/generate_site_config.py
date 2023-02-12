@@ -15,7 +15,7 @@ def generate_site_config(site_config_file_path):
         site_config_file.write("CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']\n")
         site_config_file.write("CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']\n")
         site_config_file.write(
-            "DEBUG = False  # Can be True on development server but must be False when deploying\n"
+            "DEBUG = True  # Can be True on development server but must be False when deploying\n"
         )
         site_config_file.write("SECURE_SSL_REDIRECT = False\n")
         site_config_file.write("CSRF_COOKIE_SECURE = False\n")
