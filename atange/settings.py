@@ -74,9 +74,9 @@ if DEBUG:
     LOG_DIR = BASE_DIR
 else:
     LOG_DIR = os.path.join(SITE_DIR, "log")
-LOG_FILE = os.path.join(LOG_DIR, 'django.log')
 
-assert os.path.exists(LOG_DIR), 'Log directory {} does not exist'.format(LOG_DIR)
+# assert os.path.exists(LOG_DIR), 'Log directory {} does not exist'.format(LOG_DIR)
+LOG_FILE = os.path.join(LOG_DIR, 'django.log')
 
 STATIC_ROOT = os.path.join(SITE_DIR, "static")
 # Turn on WhiteNoise storage backend that takes care of compressing static files
@@ -159,13 +159,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
