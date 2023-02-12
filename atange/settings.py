@@ -74,6 +74,7 @@ if DEBUG:
     LOG_DIR = BASE_DIR
 else:
     LOG_DIR = os.path.join(SITE_DIR, "log")
+LOG_FILE = os.path.join(LOG_DIR, 'django.log')
 
 assert os.path.exists(LOG_DIR), 'Log directory {} does not exist'.format(LOG_DIR)
 
@@ -191,7 +192,7 @@ LOGGING = {
         "file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(LOG_DIR, 'django.log'),
+            "filename": LOG_FILE,
             "maxBytes": 1024 * 1024,
             "backupCount": 2,
             "formatter": "verbose"
