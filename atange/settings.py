@@ -70,6 +70,12 @@ else:
         "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": SQLITE_FILE_PATH}
     }
 
+if DEBUG:
+    LOG_DIR = BASE_DIR
+else:
+    LOG_DIR = os.path.join(SITE_DIR, "log")
+
+assert os.path.exists(LOG_DIR), 'Log directory {} does not exist'.format(LOG_DIR)
 
 STATIC_ROOT = os.path.join(SITE_DIR, "static")
 # Turn on WhiteNoise storage backend that takes care of compressing static files
@@ -173,14 +179,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s %(levelname)s %(filename)s %(message)s"
+        }
+    },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
         },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOG_DIR, 'django.log'),
+            "maxBytes": 1024 * 1024,
+            "backupCount": 2,
+            "formatter": "verbose"
+        }
     },
     "root": {
-        "handlers": ["console"],
+        "handlers": ["console", "file"],
         "level": "DEBUG",
+        "formatter": "verbose"
     },
 }
 
