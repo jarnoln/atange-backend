@@ -17,6 +17,7 @@ def generate_site_config(site_config_file_path):
         site_config_file.write(
             "DEBUG = True  # Can be True on development server but must be False when deploying\n"
         )
+        site_config_file.write("LOGTAIL_TOKEN = ''\n")
         site_config_file.write("SECURE_SSL_REDIRECT = False\n")
         site_config_file.write("CSRF_COOKIE_SECURE = False\n")
         site_config_file.write("SESSION_COOKIE_SECURE = False\n")

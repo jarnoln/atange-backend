@@ -37,6 +37,7 @@ if SECRET_KEY == "":
         from .site_config import CSRF_COOKIE_SECURE
         from .site_config import CSRF_TRUSTED_ORIGINS
         from .site_config import DEBUG
+        from .site_config import LOGTAIL_TOKEN
         from .site_config import SECRET_KEY
         from .site_config import SECURE_SSL_REDIRECT
         from .site_config import SESSION_COOKIE_SECURE
@@ -192,7 +193,7 @@ LOGGING = {
             "maxBytes": 1024 * 1024,
             "backupCount": 2,
             "formatter": "verbose"
-        }
+        },
     },
     "root": {
         "handlers": ["console", "file"],
@@ -200,6 +201,14 @@ LOGGING = {
         "formatter": "verbose"
     },
 }
+
+if LOGTAIL_TOKEN:
+    # Add logtail handler
+    LOGGING["handlers"]["logtail"] = {
+        "class": "logtail.LogtailHandler",
+        "source_token": LOGTAIL_TOKEN
+    }
+    LOGGING["root"]["handlers"].append("logtail")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
