@@ -7,6 +7,9 @@ from django.contrib.auth.models import User, Group
 class UserGroup(models.Model):
     name = models.SlugField(max_length=250)
     title = models.CharField(max_length=250)
+    type = models.SlugField(max_length=250, default='', null=True, blank=True)  # party, district etc.
+    collective_name = models.SlugField(max_length=250, default='', null=True, blank=True)
+    # If collective-specific group. No need to set for collective admin and member groups.
 
     @property
     def members(self):
