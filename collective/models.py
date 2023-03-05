@@ -21,16 +21,20 @@ class UserGroup(models.Model):
         return Membership.objects.filter(user=user, group=self).exists()
 
     def add_member(self, user):
+        logger = logging.getLogger(__name__)
         if user.is_anonymous:
             return False
 
         if self.is_member(user):
             return False
 
+        logger.debug('Added user {} to group {}'.format(user, self.name))
         Membership.objects.create(user=user, group=self)
         return True
 
     def kick_member(self, user):
+        logger = logging.getLogger(__name__)
+        logger.debug('Kicking user {} from group {}'.format(user, self.name))
         if not user.is_anonymous:
             Membership.objects.filter(user=user, group=self).delete()
 
