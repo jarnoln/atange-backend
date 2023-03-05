@@ -32,7 +32,7 @@ class UserGroupTests(AuthTestCase):
     def test_reverse(self):
         self.assertEqual(
             reverse("collective_user_group_members", args=["jla", "gotham"]),
-            "/api/collective/jla/group/gotham/members",
+            "/api/collective/jla/group/gotham/members/",
         )
 
         self.assertEqual(
