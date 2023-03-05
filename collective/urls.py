@@ -13,7 +13,7 @@ from .views.collective_permissions import CollectivePermissions
 from .views.collective_questions import CollectiveQuestions
 from .views.question_detail import QuestionDetail
 from .views.user_group_members import UserGroupMembers, UserGroupMembersJoin, UserGroupMembersLeave
-from .views.user_groups import UserGroups
+from .views.user_groups import UserGroups, UserGroupsByType
 from .views.user_info import UserInfo
 
 
@@ -44,14 +44,19 @@ urlpatterns = [
         name="collective_user_group_members",
     ),
     path(
-        "api/collective/<slug:collective>/group/<slug:group>/join",
+        "api/collective/<slug:collective>/group/<slug:group>/join/",
         UserGroupMembersJoin.as_view(),
         name="collective_user_group_join",
     ),
     path(
-        "api/collective/<slug:collective>/group/<slug:group>/leave",
+        "api/collective/<slug:collective>/group/<slug:group>/leave/",
         UserGroupMembersLeave.as_view(),
         name="collective_user_group_leave",
+    ),
+    path(
+        "api/collective/<slug:collective>/user_groups/type/<type_name>/",
+        UserGroupsByType.as_view(),
+        name="collective_user_groups_by_type",
     ),
     path(
         "api/collective/<slug:collective>/user_groups/",

@@ -37,7 +37,12 @@ class UserGroupTests(AuthTestCase):
 
         self.assertEqual(
             reverse("collective_user_group_join", args=["jla", "gotham"]),
-            "/api/collective/jla/group/gotham/join",
+            "/api/collective/jla/group/gotham/join/",
+        )
+
+        self.assertEqual(
+            reverse("collective_user_group_leave", args=["jla", "gotham"]),
+            "/api/collective/jla/group/gotham/leave/",
         )
 
     def test_list_group_members(self):

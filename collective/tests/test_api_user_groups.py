@@ -28,7 +28,26 @@ class UserGroupListViewTests(AuthTestCase):
             name='metropolis', title='Metropolis', type='district', collective_name=collective.name
         )
 
+        ug_3 = UserGroup.objects.create(
+            name='human', title='Human', type='species', collective_name=collective.name
+        )
+
         url = reverse("collective_user_groups", args=[collective.name])
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(len(data_out), 3)
+        self.assertEqual(data_out[0]["name"], "gotham")
+        self.assertEqual(data_out[0]["title"], "Gotham")
+        self.assertEqual(data_out[0]["type"], "district")
+        self.assertEqual(data_out[1]["name"], "metropolis")
+        self.assertEqual(data_out[1]["title"], "Metropolis")
+        self.assertEqual(data_out[1]["type"], "district")
+        self.assertEqual(data_out[2]["name"], "human")
+        self.assertEqual(data_out[2]["title"], "Human")
+        self.assertEqual(data_out[2]["type"], "species")
+
+        url = reverse("collective_user_groups_by_type", args=[collective.name, 'district'])
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data_out = json.loads(response.content.decode())
@@ -39,6 +58,16 @@ class UserGroupListViewTests(AuthTestCase):
         self.assertEqual(data_out[1]["name"], "metropolis")
         self.assertEqual(data_out[1]["title"], "Metropolis")
         self.assertEqual(data_out[1]["type"], "district")
+
+        url = reverse("collective_user_groups_by_type", args=[collective.name, 'species'])
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(len(data_out), 1)
+        self.assertEqual(data_out[0]["name"], "human")
+        self.assertEqual(data_out[0]["title"], "Human")
+        self.assertEqual(data_out[0]["type"], "species")
+
 
     def test_get_empty_list_if_no_user_groups(self):
         client = APIClient()
