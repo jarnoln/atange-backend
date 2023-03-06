@@ -68,18 +68,6 @@ urlpatterns = [
         name="collective_user_groups",
     ),
     path(
-        "api/user_groups/type/<type_name>/",
-        UserGroupsByType.as_view(),
-        kwargs={"collective": ""},
-        name="user_groups_by_type",
-    ),
-    path(
-        "api/user_groups/",
-        UserGroups.as_view(),
-        kwargs={"collective": ""},
-        name="user_groups",
-    ),
-    path(
         "api/collective/<slug:collective_name>/admins/",
         CollectiveAdmins.as_view(),
         name="collective_admins",
@@ -105,6 +93,36 @@ urlpatterns = [
         name="collective",
     ),
     path("api/collectives/", CollectiveList.as_view(), name="collectives"),
+    path(
+        "api/group/<slug:group>/members/",
+        UserGroupMembers.as_view(),
+        kwargs={"collective": ""},
+        name="user_group_members",
+    ),
+    path(
+        "api/group/<slug:group>/join/",
+        UserGroupMembersJoin.as_view(),
+        kwargs={"collective": ""},
+        name="user_group_join",
+    ),
+    path(
+        "api/group/<slug:group>/leave/",
+        UserGroupMembersLeave.as_view(),
+        kwargs={"collective": ""},
+        name="user_group_leave",
+    ),
+    path(
+        "api/user_groups/type/<type_name>/",
+        UserGroupsByType.as_view(),
+        kwargs={"collective": ""},
+        name="user_groups_by_type",
+    ),
+    path(
+        "api/user_groups/",
+        UserGroups.as_view(),
+        kwargs={"collective": ""},
+        name="user_groups",
+    ),
     path(
         "api/user/<slug:username>/memberships/",
         UserMemberships.as_view(),
