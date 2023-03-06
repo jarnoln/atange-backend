@@ -53,7 +53,10 @@ class UserInfoViewTests(AuthTestCase):
 
 class UserMembershipsViewTests(AuthTestCase):
     def test_reverse(self):
-        self.assertEqual(reverse("user_memberships", args=["superman"]), "/api/user/superman/memberships/")
+        self.assertEqual(
+            reverse("user_memberships", args=["superman"]),
+            "/api/user/superman/memberships/",
+        )
 
     def test_get_user_memberships(self):
         client = APIClient()
@@ -66,8 +69,12 @@ class UserMembershipsViewTests(AuthTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(data_out), 0)
 
-        ug_1 = UserGroup.objects.create(name='metropolis', title='Metropolis', type='district')
-        ug_2 = UserGroup.objects.create(name='kryptonian', title='Kryptonian', type='species')
+        ug_1 = UserGroup.objects.create(
+            name="metropolis", title="Metropolis", type="district"
+        )
+        ug_2 = UserGroup.objects.create(
+            name="kryptonian", title="Kryptonian", type="species"
+        )
         ug_1.add_member(user)
         ug_2.add_member(user)
 

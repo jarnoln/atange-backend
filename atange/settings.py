@@ -42,7 +42,9 @@ if SECRET_KEY == "":
         from .site_config import SECURE_SSL_REDIRECT
         from .site_config import SESSION_COOKIE_SECURE
     except ImportError:
-        print("Site configuration file does not exist or not properly configured. How to create it:")
+        print(
+            "Site configuration file does not exist or not properly configured. How to create it:"
+        )
         print(
             "python {}/generate_site_config.py {}/site_config.py".format(
                 PROJECT_NAME, PROJECT_NAME
@@ -77,7 +79,7 @@ else:
     LOG_DIR = os.path.join(SITE_DIR, "log")
 
 # assert os.path.exists(LOG_DIR), 'Log directory {} does not exist'.format(LOG_DIR)
-LOG_FILE = os.path.join(LOG_DIR, 'django.log')
+LOG_FILE = os.path.join(LOG_DIR, "django.log")
 
 STATIC_ROOT = os.path.join(SITE_DIR, "static")
 # Turn on WhiteNoise storage backend that takes care of compressing static files
@@ -178,9 +180,7 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "%(asctime)s %(levelname)s %(filename)s %(message)s"
-        }
+        "verbose": {"format": "%(asctime)s %(levelname)s %(filename)s %(message)s"}
     },
     "handlers": {
         "console": {
@@ -192,21 +192,17 @@ LOGGING = {
             "filename": LOG_FILE,
             "maxBytes": 1024 * 1024,
             "backupCount": 2,
-            "formatter": "verbose"
+            "formatter": "verbose",
         },
     },
-    "root": {
-        "handlers": ["console", "file"],
-        "level": "DEBUG",
-        "formatter": "verbose"
-    },
+    "root": {"handlers": ["console", "file"], "level": "DEBUG", "formatter": "verbose"},
 }
 
 if LOGTAIL_TOKEN:
     # Add logtail handler
     LOGGING["handlers"]["logtail"] = {
         "class": "logtail.LogtailHandler",
-        "source_token": LOGTAIL_TOKEN
+        "source_token": LOGTAIL_TOKEN,
     }
     LOGGING["root"]["handlers"].append("logtail")
 

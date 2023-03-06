@@ -12,7 +12,11 @@ from .views.collective_list import CollectiveList
 from .views.collective_permissions import CollectivePermissions
 from .views.collective_questions import CollectiveQuestions
 from .views.question_detail import QuestionDetail
-from .views.user_group_members import UserGroupMembers, UserGroupMembersJoin, UserGroupMembersLeave
+from .views.user_group_members import (
+    UserGroupMembers,
+    UserGroupMembersJoin,
+    UserGroupMembersLeave,
+)
 from .views.user_groups import UserGroups, UserGroupsByType
 from .views.user_info import UserInfo, UserMemberships
 
@@ -64,6 +68,18 @@ urlpatterns = [
         name="collective_user_groups",
     ),
     path(
+        "api/user_groups/type/<type_name>/",
+        UserGroupsByType.as_view(),
+        kwargs={"collective": ""},
+        name="user_groups_by_type",
+    ),
+    path(
+        "api/user_groups/",
+        UserGroups.as_view(),
+        kwargs={"collective": ""},
+        name="user_groups",
+    ),
+    path(
         "api/collective/<slug:collective_name>/admins/",
         CollectiveAdmins.as_view(),
         name="collective_admins",
@@ -89,7 +105,11 @@ urlpatterns = [
         name="collective",
     ),
     path("api/collectives/", CollectiveList.as_view(), name="collectives"),
-    path("api/user/<slug:username>/memberships/", UserMemberships.as_view(), name="user_memberships"),
+    path(
+        "api/user/<slug:username>/memberships/",
+        UserMemberships.as_view(),
+        name="user_memberships",
+    ),
     path("api/user/<slug:username>/", UserInfo.as_view(), name="user_info"),
     path("upload/", CollectiveImportFormView.as_view(), name="collective_import_form"),
     path("", index, name="index"),

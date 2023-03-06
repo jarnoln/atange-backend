@@ -7,8 +7,12 @@ from django.contrib.auth.models import User, Group
 class UserGroup(models.Model):
     name = models.SlugField(max_length=250)
     title = models.CharField(max_length=250)
-    type = models.SlugField(max_length=250, default='', null=True, blank=True)  # party, district etc.
-    collective_name = models.SlugField(max_length=250, default='', null=True, blank=True)
+    type = models.SlugField(
+        max_length=250, default="", null=True, blank=True
+    )  # party, district etc.
+    collective_name = models.SlugField(
+        max_length=250, default="", null=True, blank=True
+    )
     # If collective-specific group. No need to set for collective admin and member groups.
 
     @property
@@ -28,13 +32,13 @@ class UserGroup(models.Model):
         if self.is_member(user):
             return False
 
-        logger.debug('Added user {} to group {}'.format(user, self.name))
+        logger.debug("Added user {} to group {}".format(user, self.name))
         Membership.objects.create(user=user, group=self)
         return True
 
     def kick_member(self, user):
         logger = logging.getLogger(__name__)
-        logger.debug('Kicking user {} from group {}'.format(user, self.name))
+        logger.debug("Kicking user {} from group {}".format(user, self.name))
         if not user.is_anonymous:
             Membership.objects.filter(user=user, group=self).delete()
 

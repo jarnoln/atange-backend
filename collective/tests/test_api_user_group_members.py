@@ -17,16 +17,13 @@ class UserGroupTests(AuthTestCase):
         token = self.login(self.user)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token)
         self.collective = Collective.objects.create(
-            name="jla",
-            title="JLA",
-            description="",
-            creator=self.user
+            name="jla", title="JLA", description="", creator=self.user
         )
         self.user_group = UserGroup.objects.create(
-            name='gotham',
-            title='Gotham',
-            type='district',
-            collective_name=self.collective.name
+            name="gotham",
+            title="Gotham",
+            type="district",
+            collective_name=self.collective.name,
         )
 
     def test_reverse(self):
@@ -46,7 +43,10 @@ class UserGroupTests(AuthTestCase):
         )
 
     def test_list_group_members(self):
-        url = reverse("collective_user_group_members", args=[self.collective.name, self.user_group.name])
+        url = reverse(
+            "collective_user_group_members",
+            args=[self.collective.name, self.user_group.name],
+        )
         self.assertEqual(self.user_group.members.count(), 0)
         self.assertFalse(self.user_group.is_member(self.user))
         response = self.client.get(url)
@@ -62,7 +62,10 @@ class UserGroupTests(AuthTestCase):
         self.assertEqual(data_out[0], self.user.username)
 
     def test_join_group(self):
-        url = reverse("collective_user_group_join", args=[self.collective.name, self.user_group.name])
+        url = reverse(
+            "collective_user_group_join",
+            args=[self.collective.name, self.user_group.name],
+        )
         self.assertEqual(self.user_group.members.count(), 0)
         self.assertFalse(self.user_group.is_member(self.user))
         response = self.client.post(url, data={})
@@ -71,7 +74,10 @@ class UserGroupTests(AuthTestCase):
         self.assertTrue(self.user_group.is_member(self.user))
 
     def test_leave_group(self):
-        url = reverse("collective_user_group_leave", args=[self.collective.name, self.user_group.name])
+        url = reverse(
+            "collective_user_group_leave",
+            args=[self.collective.name, self.user_group.name],
+        )
         self.user_group.add_member(self.user)
         self.assertEqual(self.user_group.members.count(), 1)
         self.assertTrue(self.user_group.is_member(self.user))
