@@ -14,7 +14,7 @@ from .views.collective_questions import CollectiveQuestions
 from .views.question_detail import QuestionDetail
 from .views.user_group_members import UserGroupMembers, UserGroupMembersJoin, UserGroupMembersLeave
 from .views.user_groups import UserGroups, UserGroupsByType
-from .views.user_info import UserInfo
+from .views.user_info import UserInfo, UserMemberships
 
 
 urlpatterns = [
@@ -89,6 +89,7 @@ urlpatterns = [
         name="collective",
     ),
     path("api/collectives/", CollectiveList.as_view(), name="collectives"),
+    path("api/user/<slug:username>/memberships/", UserMemberships.as_view(), name="user_memberships"),
     path("api/user/<slug:username>/", UserInfo.as_view(), name="user_info"),
     path("upload/", CollectiveImportFormView.as_view(), name="collective_import_form"),
     path("", index, name="index"),

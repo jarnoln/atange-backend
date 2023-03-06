@@ -6,9 +6,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from collective.serializers import (
-    UserInfoSerializer,
-)
+from collective.models import UserGroup
+from collective.serializers import UserInfoSerializer, UserGroupSerializer
 
 
 class UserInfo(APIView):
@@ -24,3 +23,11 @@ class UserInfo(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserMemberships(APIView):
+    def get(self, request, username, format=None):
+        user = get_object_or_404(User, username=username)
+        groups = UserGroup.objects.filter(memberships__user=user)
+        serializer = UserGroupSerializer(groups, many=True)
+        return Response(serializer.data)
