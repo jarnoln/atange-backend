@@ -8,10 +8,10 @@ class UserGroup(models.Model):
     name = models.SlugField(max_length=250)
     title = models.CharField(max_length=250)
     type = models.SlugField(
-        max_length=250, default="", null=True, blank=True
+        max_length=250, default=None, null=True, blank=True
     )  # party, district etc.
     collective_name = models.SlugField(
-        max_length=250, default="", null=True, blank=True
+        max_length=250, default=None, null=True, blank=True
     )
     # If collective-specific group. No need to set for collective admin and member groups.
 
@@ -43,7 +43,7 @@ class UserGroup(models.Model):
             Membership.objects.filter(user=user, group=self).delete()
 
     def __str__(self):
-        return "{}:{}".format(self.name, self.title)
+        return "{}:{}:{}:{}".format(self.name, self.title, self.type, self.collective_name)
 
 
 class Membership(models.Model):

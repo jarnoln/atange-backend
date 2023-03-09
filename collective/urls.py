@@ -96,31 +96,31 @@ urlpatterns = [
     path(
         "api/group/<slug:group>/members/",
         UserGroupMembers.as_view(),
-        kwargs={"collective": ""},
+        kwargs={"collective": None},
         name="user_group_members",
     ),
     path(
         "api/group/<slug:group>/join/",
         UserGroupMembersJoin.as_view(),
-        kwargs={"collective": ""},
+        kwargs={"collective": None},
         name="user_group_join",
     ),
     path(
         "api/group/<slug:group>/leave/",
         UserGroupMembersLeave.as_view(),
-        kwargs={"collective": ""},
+        kwargs={"collective": None},
         name="user_group_leave",
     ),
     path(
         "api/user_groups/type/<type_name>/",
         UserGroupsByType.as_view(),
-        kwargs={"collective": ""},
+        kwargs={"collective": None},
         name="user_groups_by_type",
     ),
     path(
         "api/user_groups/",
         UserGroups.as_view(),
-        kwargs={"collective": ""},
+        kwargs={"collective": None},
         name="user_groups",
     ),
     path(

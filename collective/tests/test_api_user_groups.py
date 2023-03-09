@@ -93,11 +93,11 @@ class UserGroupListViewTests(AuthTestCase):
         user = self.create_user()
         token = self.login(user)
         client.credentials(HTTP_AUTHORIZATION="Token " + token)
-        ug_1 = UserGroup.objects.create(name="gotham", title="Gotham", type="district")
+        ug_1 = UserGroup.objects.create(name="gotham", title="Gotham", type="district", collective_name=None)
         ug_2 = UserGroup.objects.create(
-            name="metropolis", title="Metropolis", type="district"
+            name="metropolis", title="Metropolis", type="district", collective_name=None
         )
-        ug_3 = UserGroup.objects.create(name="human", title="Human", type="species")
+        ug_3 = UserGroup.objects.create(name="human", title="Human", type="species", collective_name=None)
 
         url = reverse("user_groups")
         response = client.get(url)

@@ -19,8 +19,8 @@ class UserGroupModelTests(TestCase):
         self.assertEqual(UserGroup.objects.first(), user_group)
 
     def test_string(self):
-        user_group = UserGroup.objects.create(name="admins", title="Admins")
-        self.assertEqual(str(user_group), "admins:Admins")
+        user_group = UserGroup.objects.create(name="admins", title="Admins", type="admin", collective_name='')
+        self.assertEqual(str(user_group), "admins:Admins:admin:")
 
     def test_adding_members(self):
         admins = UserGroup.objects.create(name="admins", title="Admins")

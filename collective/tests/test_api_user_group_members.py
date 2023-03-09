@@ -30,6 +30,7 @@ class UserGroupTests(AuthTestCase):
             name="metropolis",
             title="Metropolis",
             type="district",
+            collective_name=None
         )
 
     def test_reverse(self):
