@@ -126,6 +126,19 @@ class UserGroupTests(AuthTestCase):
         self.assertEqual(self.user_group_2.members.count(), 1)
         self.assertTrue(self.user_group_2.is_member(self.user))
 
+    def test_cant_join_if_already_member(self):
+        url = reverse(
+            "user_group_join",
+            args=[self.user_group_2.name],
+        )
+        self.user_group_2.add_member(self.user)
+        self.assertEqual(self.user_group_2.members.count(), 1)
+        self.assertTrue(self.user_group_2.is_member(self.user))
+        response = self.client.post(url, data={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(self.user_group_2.members.count(), 1)
+        self.assertTrue(self.user_group_2.is_member(self.user))
+
     def test_collective_leave_group(self):
         url = reverse(
             "collective_user_group_leave",

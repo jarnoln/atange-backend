@@ -27,9 +27,11 @@ class UserGroup(models.Model):
     def add_member(self, user):
         logger = logging.getLogger(__name__)
         if user.is_anonymous:
+            logger.warning('User {} is not logged in, cant join group {}. Aborting.'.format(user, self.name))
             return False
 
         if self.is_member(user):
+            logger.warning('User {} is already member of group {}. Aborting.'.format(user, self.name))
             return False
 
         logger.debug("Added user {} to group {}".format(user, self.name))
