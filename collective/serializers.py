@@ -10,7 +10,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "first_name", "last_name"]
+        fields = ["username", "email", "first_name", "last_name"]
 
 
 class UserGroupSerializer(serializers.ModelSerializer):

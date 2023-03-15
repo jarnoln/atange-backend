@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from collective.models import UserGroup
+from collective.serializers import UserInfoSerializer
 
 
 class UserGroupMembers(APIView):
@@ -19,6 +20,17 @@ class UserGroupMembers(APIView):
         for member in user_group.members:
             member_usernames.append(member.username)
         return Response(member_usernames)
+
+
+class UserGroupMemberDetails(APIView):
+    """List members of given user group (detailed user information)"""
+
+    def get(self, request, collective, group, format=None):
+        user_group = get_object_or_404(
+            UserGroup, name=group, collective_name=collective
+        )
+        serializer = UserInfoSerializer(user_group.members, many=True)
+        return Response(serializer.data)
 
 
 class UserGroupMembersJoin(APIView):

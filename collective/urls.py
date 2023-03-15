@@ -14,6 +14,7 @@ from .views.collective_questions import CollectiveQuestions
 from .views.question_detail import QuestionDetail
 from .views.user_group_members import (
     UserGroupMembers,
+    UserGroupMemberDetails,
     UserGroupMembersJoin,
     UserGroupMembersLeave,
 )
@@ -95,9 +96,15 @@ urlpatterns = [
     path("api/collectives/", CollectiveList.as_view(), name="collectives"),
     path(
         "api/group/<slug:group>/members/",
-        UserGroupMembers.as_view(),
+        UserGroupMembers.as_view(),  # Returns list of usernames
         kwargs={"collective": None},
         name="user_group_members",
+    ),
+    path(
+        "api/group/<slug:group>/member_details/",
+        UserGroupMemberDetails.as_view(),  # Returns detailed member information
+        kwargs={"collective": None},
+        name="user_group_member_details",
     ),
     path(
         "api/group/<slug:group>/join/",

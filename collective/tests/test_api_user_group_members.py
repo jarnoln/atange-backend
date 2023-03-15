@@ -55,6 +55,11 @@ class UserGroupTests(AuthTestCase):
         )
 
         self.assertEqual(
+            reverse("user_group_member_details", args=["gotham"]),
+            "/api/group/gotham/member_details/",
+        )
+
+        self.assertEqual(
             reverse("user_group_join", args=["gotham"]),
             "/api/group/gotham/join/",
         )
@@ -101,6 +106,26 @@ class UserGroupTests(AuthTestCase):
         data_out = json.loads(response.content.decode())
         self.assertEqual(len(data_out), 1)
         self.assertEqual(data_out[0], self.user.username)
+
+    def test_list_group_member_details(self):
+        url = reverse(
+            "user_group_member_details",
+            args=[self.user_group_2.name],
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data_out = json.loads(response.content.decode())
+        self.assertEqual(len(data_out), 0)
+
+        self.user_group_2.add_member(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data_out = json.loads(response.content.decode())
+        print('User group member details: {}'.format(data_out))
+        self.assertEqual(len(data_out), 1)
+        self.assertEqual(data_out[0]['username'], self.user.username)
+        self.assertEqual(data_out[0]['first_name'], self.user.first_name)
+        self.assertEqual(data_out[0]['last_name'], self.user.last_name)
 
     def test_collective_join_group(self):
         url = reverse(
