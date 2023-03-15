@@ -17,11 +17,15 @@ class UserInfo(APIView):
         return Response(serializer.data)
 
     def put(self, request, username, format=None):
+        logger = logging.getLogger(__name__)
+        logger.info('PUT {}'.format(str(request.data)))
         user = get_object_or_404(User, username=username)
         serializer = UserInfoSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        else:
+            logger.warning('Invalid user data: {}'.format(str(serializer.errors)))
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
