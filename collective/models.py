@@ -12,7 +12,7 @@ class GlobalSettings(models.Model):
     require_names = models.BooleanField(default=False, blank=True)  # If users are required to give names
 
 
-class UserInfo(models.Model):
+class UserDescription(models.Model):
     """ Optional extra information about users """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.TextField(default='', blank=True)
