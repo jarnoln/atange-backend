@@ -4,6 +4,14 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 
 
+class GlobalSettings(models.Model):
+    """Global settings for this deployment"""
+    title = models.CharField(max_length=250, default='Atange', blank=True)  # Title text for home page
+    one_collective = models.BooleanField(default=False, blank=True)  # Only one collective is allowed to exist
+    users_can_create_collectives = models.BooleanField(default=False, blank=True)
+    require_names = models.BooleanField(default=False, blank=True)  # If users are required to give names
+
+
 class UserGroup(models.Model):
     name = models.SlugField(max_length=250)
     title = models.CharField(max_length=250)

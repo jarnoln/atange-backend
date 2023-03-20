@@ -11,6 +11,7 @@ from .views.collective_import import CollectiveImportFormView
 from .views.collective_list import CollectiveList
 from .views.collective_permissions import CollectivePermissions
 from .views.collective_questions import CollectiveQuestions
+from .views.global_settings import GlobalSettingsView
 from .views.question_detail import QuestionDetail
 from .views.user_group_members import (
     UserGroupMembers,
@@ -136,6 +137,7 @@ urlpatterns = [
         name="user_memberships",
     ),
     path("api/user/<slug:username>/", UserInfo.as_view(), name="user_info"),
+    path("api/settings/", GlobalSettingsView.as_view(), name="settings"),
     path("upload/", CollectiveImportFormView.as_view(), name="collective_import_form"),
     path("", index, name="index"),
 ]

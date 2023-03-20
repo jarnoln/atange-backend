@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 from collective.models import (
+    GlobalSettings,
     UserGroup,
     Membership,
     Collective,
@@ -9,6 +10,14 @@ from collective.models import (
     Answer,
     Statistics,
 )
+
+
+class GlobalSettingsModelTests(TestCase):
+    def test_can_save_and_load(self):
+        gs = GlobalSettings()
+        gs.save()
+        self.assertEqual(GlobalSettings.objects.count(), 1)
+        self.assertEqual(GlobalSettings.objects.first(), gs)
 
 
 class UserGroupModelTests(TestCase):

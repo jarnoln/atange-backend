@@ -2,7 +2,15 @@ import logging
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Collective, QuestionnaireItem, Answer, UserGroup
+from .models import Collective, GlobalSettings, QuestionnaireItem, Answer, UserGroup
+
+
+class GlobalSettingsSerializer(serializers.ModelSerializer):
+    """Editable user data (does not include username or password)"""
+
+    class Meta:
+        model = GlobalSettings
+        fields = '__all__'
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
