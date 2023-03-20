@@ -9,6 +9,7 @@ from collective.models import (
     QuestionnaireItem,
     Answer,
     Statistics,
+    UserInfo
 )
 
 
@@ -18,6 +19,20 @@ class GlobalSettingsModelTests(TestCase):
         gs.save()
         self.assertEqual(GlobalSettings.objects.count(), 1)
         self.assertEqual(GlobalSettings.objects.first(), gs)
+
+
+class UserInfoModelTests(TestCase):
+    def test_can_save_and_load(self):
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        user_info = UserInfo(user=user)
+        user_info.save()
+        self.assertEqual(UserInfo.objects.count(), 1)
+        self.assertEqual(UserInfo.objects.first(), user_info)
+
+    def test_string(self):
+        user = User.objects.create_user(username="superman", password="Man_of_Steel")
+        user_info = UserInfo.objects.create(user=user)
+        self.assertEqual(str(user_info), "superman")
 
 
 class UserGroupModelTests(TestCase):

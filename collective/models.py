@@ -12,6 +12,17 @@ class GlobalSettings(models.Model):
     require_names = models.BooleanField(default=False, blank=True)  # If users are required to give names
 
 
+class UserInfo(models.Model):
+    """ Optional extra information about users """
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    description = models.TextField(default='', blank=True)
+    candidate_number = models.IntegerField(null=True, blank=True)
+    home_page = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return "{}".format(self.user.username)
+
+
 class UserGroup(models.Model):
     name = models.SlugField(max_length=250)
     title = models.CharField(max_length=250)
