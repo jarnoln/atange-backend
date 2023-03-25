@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, Group
 class GlobalSettings(models.Model):
     """Global settings for this deployment"""
     title = models.CharField(max_length=250, default='Atange', blank=True)  # Title text for home page
+    allow_register = models.BooleanField(default=True, blank=True)  # Are new users allowed to register
     one_collective = models.BooleanField(default=False, blank=True)  # Only one collective is allowed to exist
     users_can_create_collectives = models.BooleanField(default=False, blank=True)
     require_names = models.BooleanField(default=False, blank=True)  # If users are required to give names
