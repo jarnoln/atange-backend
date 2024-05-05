@@ -1,6 +1,6 @@
 dj-database-url==1.2.0
 Django>=4.2,<5.0  # 4.2 is LTS version, support ending in April 2026
-django-cors-headers==3.13.0
+django-cors-headers==4.3.1
 django-filter==24.2  # Recommended by Django REST framework
 djangorestframework==3.14.0
 djoser==2.2.2  # REST implementation of Django authentication system
