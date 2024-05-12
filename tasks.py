@@ -18,7 +18,11 @@ def deploy(context, user, host):
     virtualenv = os.path.join(site_folder, "virtualenv")
     python = virtualenv + "/bin/python"
     pip = virtualenv + "/bin/pip"
-    connection = Connection(host=host, user=user)
+    aws_key_file_path = os.environ.get("AWS_KEY_FILE_PATH", '')
+    if aws_key_file_path:
+        connection = Connection(host=host, user=user, connect_kwargs={'key_filename': aws_key_file_path})
+    else:
+        connection = Connection(host=host, user=user)
     _create_directory_structure_if_necessary(connection, site_folder)
     _init_virtualenv(connection, site_folder)
     _get_latest_source(connection, source_folder)
@@ -53,7 +57,7 @@ def _get_latest_source(c, source_folder):
         # Note: This may fail until cloned once manually
         c.run("cd {} && git config pull.rebase false".format(source_folder))
     else:
-        c.run("cd {} && git pull".format(source_folder))
+        c.run("cd {} && git pull origin main".format(source_folder))
 
 
 def _install_virtualenv_libraries(c, source_folder, pip):
