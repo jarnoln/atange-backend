@@ -4,7 +4,8 @@ from invoke import task
 from fabric import Connection
 
 
-REPO_URL = "git@github.com:jarnoln/atange-backend.git"
+# REPO_URL = "git@github.com:jarnoln/atange-backend.git"
+REPO_URL = "git@gitlab.com:jarnoln/atange-backend.git"
 
 
 @task
