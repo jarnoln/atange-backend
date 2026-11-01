@@ -13,12 +13,12 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9]
+        python-version: ["3.13"]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Dependencies
@@ -26,7 +26,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install coverage
-        pip install codecov
     - name: Run Tests
       run: |
         python atange/generate_site_config.py atange/site_config.py
@@ -34,5 +33,4 @@ jobs:
     - name: Run coverage
       run: |
         coverage run manage.py test -v2
-        codecov
         coverage report
