@@ -7,7 +7,7 @@
 Backend for Atange
 
 Created using:
-* [Django](https://www.djangoproject.com/)(4.1)
+* [Django](https://www.djangoproject.com/)
 * [Django REST framework](https://www.django-rest-framework.org/)
 * [djoser](https://djoser.readthedocs.io)
 
