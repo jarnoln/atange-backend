@@ -84,7 +84,14 @@ LOG_FILE = os.path.join(LOG_DIR, "django.log")
 STATIC_ROOT = os.path.join(SITE_DIR, "static")
 # Turn on WhiteNoise storage backend that takes care of compressing static files
 # and creating unique names for each version, so they can safely be cached forever.
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Application definition
 
